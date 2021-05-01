@@ -1,0 +1,206 @@
+// index.js
+// 获取应用实例
+const app = getApp()
+const db = wx.cloud.database();
+const _ = db.command;
+const config = require("../../config.js");
+Page({
+  data: {
+    tabbar: {},//在tabBar的list中配置的页面的.js文件的data中加入tabbar:{}
+    array: ['外卖', '拼车', '娱乐', '网购'],
+    kind: JSON.parse(config.data).kind,
+    indexCur:-2,
+    showList: false,
+    list: [],
+  },
+  // 事件处理函数
+  bindViewTap() {
+    wx.navigateTo({
+      url: '../logs/logs'
+    })
+  },
+  onLoad() {
+    app.editTabbar();//在onload方法中调用app.editTabbar();
+    this.listkind();
+    this.getList();
+  },
+  //监测屏幕滚动
+  onPageScroll: function(e) {
+      this.setData({
+            scrollTop: parseInt((e.scrollTop) * wx.getSystemInfoSync().pixelRatio)
+      })
+},
+   //获取上次布局记忆
+   listkind() {
+      let that = this;
+      wx.getStorage({
+            key: 'iscard',
+            success: function(res) {
+                  that.setData({
+                        iscard: res.data
+                  })
+            },
+            fail() {
+                  that.setData({
+                        iscard: true,
+                  })
+            }
+      })
+},
+  //跳转搜索
+  goSearch(){
+    wx.navigateTo({
+      url: '/pages/search/index'
+    })
+  },
+  //布局方式选择
+  changeCard() {
+    let that = this;
+    if (that.data.iscard) {
+          that.setData({
+                iscard: false
+          })
+          wx.setStorage({
+                key: 'iscard',
+                data: false,
+          })
+    } else {
+          that.setData({
+                iscard: true
+          })
+          wx.setStorage({
+                key: 'iscard',
+                data: true,
+          })
+    }
+},
+//分类选择
+kindSelect(e) {
+  this.setData({
+        indexCur: e.currentTarget.dataset.id - 1 ,
+        scrollLeft: (e.currentTarget.dataset.id - 3) * 100,
+        showList: false,
+  })
+  this.getList();
+},
+//选择全部
+  selectAll() {
+    this.setData({
+          indexCur: -2,
+          scrollLeft: -200,
+          showList: false,
+    })
+    this.getList();
+  }, 
+  //展示列表小面板
+  showlist() {
+    let that = this;
+    if (that.data.showList) {
+        that.setData({
+              showList: false,
+        })
+    } else {
+        that.setData({
+              showList: true,
+        })
+    }
+  },
+
+  getList() {
+  let that = this;
+  if (that.data.indexCur == -2) {
+        var index = _.neq(-2); //除-2之外所有
+  } else {
+        var index = that.data.indexCur + '' //小程序搜索必须对应格式
+  }
+  db.collection('post').where({
+        //status: 0,
+        //dura: _.gt(new Date().getTime()),
+        index: index
+  }).orderBy('creat', 'desc').limit(20).get({
+        success: function(res) {
+              wx.stopPullDownRefresh(); //暂停刷新动作
+              if (res.data.length == 0) {
+                    that.setData({
+                          nomore: true,
+                          list: [],
+                    })
+                    return false;
+              }
+              if (res.data.length < 20) {
+                    that.setData({
+                          nomore: true,
+                          page: 0,
+                          list: res.data,
+                    })
+              } else {
+                    that.setData({
+                          page: 0,
+                          list: res.data,
+                          nomore: false,
+                    })
+              }
+        }
+  })
+},
+ //跳转详情
+detail(e) {
+      let that = this;
+      wx.navigateTo({
+            url: '/pages/detail/detail?scene=' + e.currentTarget.dataset.id,
+      })
+},
+more() {
+      let that = this;
+      if (that.data.nomore || that.data.list.length < 20) {
+            return false
+      }
+      let page = that.data.page + 1;
+      if (that.data.indexCur == -2) {
+            var index = _.neq(-2); //除-2之外所有
+      } else {
+            var index = that.data.indexCur + '' //小程序搜索必须对应格式
+      }
+      db.collection('publish').where({
+            //status: 0,
+            //dura: _.gt(new Date().getTime()),
+            index : index
+      }).orderBy('creat', 'desc').skip(page * 20).limit(20).get({
+            success: function(res) {
+                  if (res.data.length == 0) {
+                        that.setData({
+                              nomore: true
+                        })
+                        return false;
+                  }
+                  if (res.data.length < 20) {
+                        that.setData({
+                              nomore: true
+                        })
+                  }
+                  that.setData({
+                        page: page,
+                        list: that.data.list.concat(res.data)
+                  })
+            },
+            fail() {
+                  wx.showToast({
+                        title: '获取失败',
+                        icon: 'none'
+                  })
+            }
+      })
+},
+//下拉刷新
+onPullDownRefresh() {
+      this.getList();
+},
+gotop() {
+      wx.pageScrollTo({
+            scrollTop: 0
+      })
+},
+onReachBottom() {
+      this.more();
+},
+})

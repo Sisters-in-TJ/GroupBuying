@@ -1,0 +1,30 @@
+<!--pages/middle/middle.wxml-->
+<form bindsubmit="createPost">
+<view>
+  <input placeholder="我想拼的是" value="{{name}}" bindblur="nameBlur"/>
+  <input placeholder="拼单描述" value="{{thing}}" bindblur="thingBlur"/>
+  <view class="weui-label">分类</view>
+    <picker bindchange="bindPickerChange" value="{{cids}}" range="{{kind}}" range-key="name">
+      <block wx:if="{{cids!==-1}}">当前选择：{{kind[cids].name}}</block>
+      <block wx:if="{{cids==-1}}">请选择</block>
+    </picker>
+  <input placeholder="拼单地址" value="{{address}}" bindblur="addressBlur"/>
+  <input placeholder="拼单总价" value="{{price}}" type="digit" bindblur="priceBlur"/>
+  <input placeholder="拼单人数" value="{{number}}" type="number" bindblur="numberBlur"/>
+</view>
+<view class="weui-uploader__files">
+        <block wx:for="{{imageList}}" wx:for-item="image" wx:for-index='idx'>
+          <view class="weui-uploader__file">
+            <image class="weui-uploader__img" src="{{image}}" data-id="{{idx}}" data-src="{{image}}" bindtap="previewImage"></image>
+          </view>
+        </block>
+      </view>
+      <view class="weui-uploader__input-box">
+        <view class="weui-uploader__input" bindtap="chooseImage">
+          <image src="/images/add-off.png"></image>
+        </view>
+</view>
+
+<button type="primary" formType="submit">Submit</button>
+<button formType="reset">Reset</button>
+</form>

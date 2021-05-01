@@ -1,0 +1,7 @@
+.b_picker {
+  font-size: 28rpx;
+  line-height: 30rpx;
+  display: flex;
+  align-items: center;
+  color: #8c9aa8;
+}
