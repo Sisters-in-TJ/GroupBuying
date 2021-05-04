@@ -1,7 +1,96 @@
+.b_contain {
+  padding: 32rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #fff;
+  box-shadow: 0 30rpx 20rpx rgb(240, 240, 240);
+}
+.b_top {
+  display: flex;
+}
+.b_poster {
+  width: 270rpx;
+  display: flex;
+}
+.right {
+  padding-left: 10rpx;
+  width: 26rpx;
+  height: 26rpx;
+}
+.b_poster image {
+  width: 250rpx;
+  height: 250rpx;
+}
+.b_content {
+  width: 410rpx;
+  height: 250rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.b_ccontain {
+  width: 100%;
+  padding: 32rpx;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+.b_card {
+  width: 100%;
+  padding: 40rpx 30rpx;
+  display: flex;
+  border-radius: 18rpx;
+  box-shadow: 0 0 20rpx #ebebeb;
+  flex-direction: column;
+  background: #fff;
+  box-sizing: border-box;
+}
+.b_border {
+  border-bottom: 1rpx solid #eee;
+  width: 100%;
+  height: 2rpx;
+}
+.b_bar {
+  height: 90rpx;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.b_name {
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
+}
+
 .b_picker {
-  font-size: 28rpx;
   line-height: 30rpx;
   display: flex;
   align-items: center;
   color: #8c9aa8;
+}
+.b_bar {
+  height: 90rpx;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.b_publish {
+  margin-top: 30rpx;
+  width: 100%;
+  height: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fbbd08;
+  color: #fff;
+  border-radius: 40rpx;
+  letter-spacing: 4rpx;
+  font-size: 32rpx;
+  border: none;
+  font-weight: 500;
 }

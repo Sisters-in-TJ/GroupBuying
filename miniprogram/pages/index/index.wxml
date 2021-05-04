@@ -47,9 +47,11 @@
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="card_one" bindtap="detail" data-id="{{item._id}}">
                         <image lazy-load class="card_poster" src="{{item.imageList[0]}}"></image>
+                       <!--云图片调用-->
+                        <!-- <image lazy-load class="card_poster" src="{{item.images_fileID[0]}}"></image> -->
                         <view class="card_title text-cut">{{item.name}}
                         </view>
-                        <view class="card_author text-cut">{{item.number}}人
+                        <view class="card_author text-cut">{{item.status}}/{{item.number}}人
                         </view>
                         <view class="card_between">
                               <view class="card_price">￥{{item.price}}.00元</view>
@@ -65,11 +67,13 @@
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="list_box" bindtap="detail" data-id="{{item._id}}">
                         <image lazy-load class="list_poster" src="{{item.imageList[0]}}"></image>
+                         <!--云图片调用-->
+                        <!-- <image lazy-load class="card_poster" src="{{item.images_fileID[0]}}"></image> -->
                         <view class="list_content">
                               <view class="list_word">
                                     <view class="list_title text-cut">{{item.name }}
                                     </view>
-                                    <view class="list_author text-cut">{{item.number}}人
+                                    <view class="list_author text-cut">{{item.status}}/{{item.number}}人
                                     </view>
                               </view>
                               <view class="list_between">
@@ -97,6 +101,4 @@
       </view>
 </van-transition>
 
-<view>
-  <tabbar tabbar="{{tabbar}}"></tabbar>
-</view>
+

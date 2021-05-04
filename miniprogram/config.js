@@ -3,10 +3,7 @@ var data = {
       env: 'cloud1-8gt636nb65be0b4e',
       //分享配置
       share_title: 'groupbuying',
-      kind: [{
-                  name: '外卖',
-                  id: -1
-            },
+      kind: [
             {
                   name: '拼车',
                   id: 0
@@ -20,8 +17,12 @@ var data = {
                   id: 2
             },
             {
-                  name: '其他',
+                  name: '外卖',
                   id: 3
+            },
+            {
+                  name: '其他',
+                  id: 4
             },
       ],
 }

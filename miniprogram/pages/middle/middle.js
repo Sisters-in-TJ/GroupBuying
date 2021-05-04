@@ -15,26 +15,14 @@ Page({
     price:'',
     number:'',
     imageList:[],
+    images_fileID:[],
     loading: false,
     kind: JSON.parse(config.data).kind.splice(1),
     cids: '-1',
+    dura: 3,
   },
   onLoad: function (options) {
     app.editTabbar();
-  },
-  onReady: function () {
-  },
-  onShow: function () {
-  },
-  onHide: function () {
-  },
-  onUnload: function () {
-  },
-  onPullDownRefresh: function () {
-  },
-  onReachBottom: function () {
-  },
-  onShareAppMessage: function () {
   },
   createPost(e) {
     let that = this
@@ -109,8 +97,12 @@ Page({
         price: this.data.price,
         number: this.data.number,
         imageList: this.data.imageList,
+        images_fileID: this.data.images_fileID,
         creat: new Date().getTime(),
-        key: this.data.name + this.data.thing
+        key: this.data.name + this.data.thing,
+        status: 0, //已拼几人
+        need: this.data.number,//还需要几个人
+        dura: new Date().getTime() + this.data.dura * (24 * 60 * 60 * 1000),
       },
       success: res => {
         // 在返回结果中会包含新创建的记录的 _id
@@ -122,7 +114,6 @@ Page({
               _openid: this.data.openid,
             }
           ],
-          newContent: ''
         })
         wx.showToast({
           title: '新增记录成功',
@@ -141,7 +132,6 @@ Page({
       }
     })
   },
-
   nameBlur(e) {
     this.setData({
       name: e.detail.value
@@ -167,18 +157,33 @@ Page({
       number: e.detail.value
     })
   },
-
+  duraChange(e) {
+    this.data.dura = e.detail;
+},
   chooseImage: function (event) {
     var that = this;
     wx.chooseImage({
       count: 3, // 一次最多可以选择2张图片一起上传
-      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      sizeType: ['original', 'compressed'],//可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], //可以指定来源是相册还是相机，默认二者都有
       success: function (res) {
         console.log(res)
-        var imgeList = that.data.imageList.concat(res.tempFilePaths);
+        var imageList = that.data.imageList.concat(res.tempFilePaths);
+        var imageUrl = imageList[0].split("/");
+        var imagename = imageUrl[imageUrl.length - 1];//得到图片的名称
+        var images_fileID = that.data.images_fileID;
+        wx.cloud.uploadFile({
+          cloudPath: "community/article_images/" + imagename,  
+          filePath: imageList[0],
+          success:res =>{
+            images_fileID.push(res.fileID);
+            that.setData({
+              images_fileID: images_fileID//更新data中的fileID
+            })
+          }
+        })
         that.setData({
-          imageList: imgeList
+          imageList: imageList
         });
       }
     })

@@ -15,26 +15,6 @@ Page({
   onLoad: function (options) {
     this.gethis();
   },
-  onReady: function () {
-  },
-  onShow: function () {
-  
-  },
-  onHide: function () {
-  
-  },
-  onUnload: function () {
-  
-  },
-  onPullDownRefresh: function () {
-  
-  },
-  onReachBottom: function () {
-  
-  },
-  onShareAppMessage: function () {
-  
-  },
   gethis() {
     let that = this;
     wx.getStorage({
@@ -78,7 +58,9 @@ choosekey(e) {
           key: db.RegExp({
                 regexp: '.*' + key + '.*',
                 options: 'i',
-          })
+          }),
+          need: _.neq(0),
+        //dura: _.gt(new Date().getTime()),
     }).orderBy('creat', 'desc').limit(20).get({
           success: res => {
                 wx.hideLoading();

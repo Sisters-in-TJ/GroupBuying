@@ -7,10 +7,11 @@ const config = require("../../config.js");
 Page({
   data: {
     tabbar: {},//在tabBar的list中配置的页面的.js文件的data中加入tabbar:{}
-    array: ['外卖', '拼车', '娱乐', '网购'],
     kind: JSON.parse(config.data).kind,
     indexCur:-2,
     showList: false,
+    scrollTop: 0,
+    nomore: false,
     list: [],
   },
   // 事件处理函数
@@ -114,7 +115,7 @@ kindSelect(e) {
         var index = that.data.indexCur + '' //小程序搜索必须对应格式
   }
   db.collection('post').where({
-        //status: 0,
+        need: _.neq(0),
         //dura: _.gt(new Date().getTime()),
         index: index
   }).orderBy('creat', 'desc').limit(20).get({

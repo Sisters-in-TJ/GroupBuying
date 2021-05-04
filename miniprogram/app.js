@@ -1,7 +1,7 @@
 // app.js
 App({
   onLaunch() {
-    wx.hideTabBar();//隐藏系统自带的tabBar
+   // wx.hideTabBar();//隐藏系统自带的tabBar
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
