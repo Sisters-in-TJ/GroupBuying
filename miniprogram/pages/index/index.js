@@ -78,7 +78,7 @@ Page({
 //分类选择
 kindSelect(e) {
   this.setData({
-        indexCur: e.currentTarget.dataset.id - 1 ,
+        indexCur: e.currentTarget.dataset.id ,
         scrollLeft: (e.currentTarget.dataset.id - 3) * 100,
         showList: false,
   })
@@ -116,7 +116,7 @@ kindSelect(e) {
   }
   db.collection('post').where({
         need: _.neq(0),
-        //dura: _.gt(new Date().getTime()),
+        dura: _.gt(new Date().getTime()),
         index: index
   }).orderBy('creat', 'desc').limit(20).get({
         success: function(res) {

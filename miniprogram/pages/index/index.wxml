@@ -22,7 +22,7 @@
       </view>
       <scroll-view scroll-x class="nav" scroll-with-animation scroll-left="{{scrollLeft}}rpx">
             <view class="nav-item" wx:for="{{kind}}" wx:key="id" bindtap="kindSelect" data-id="{{index}}">
-                  <view class="nav-text {{index==indexCur+1?'tab-on':''}}">{{item.name}}</view>
+                  <view class="nav-text {{index==indexCur?'tab-on':''}}">{{item.name}}</view>
             </view>
       </scroll-view>
       <view class="kind_img" bindtap="showlist">
@@ -46,9 +46,9 @@
       <view class="card_grid" wx:if="{{list.length>0}}">
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="card_one" bindtap="detail" data-id="{{item._id}}">
-                        <image lazy-load class="card_poster" src="{{item.imageList[0]}}"></image>
-                       <!--云图片调用-->
-                        <!-- <image lazy-load class="card_poster" src="{{item.images_fileID[0]}}"></image> -->
+                  <!-- 本地图片调用 -->
+                        <!-- <image lazy-load class="card_poster" src="{{item.imageList[0]}}"></image> -->
+                        <image lazy-load class="card_poster" src="{{item.images_fileID[0]}}"></image>
                         <view class="card_title text-cut">{{item.name}}
                         </view>
                         <view class="card_author text-cut">{{item.status}}/{{item.number}}人
@@ -66,9 +66,9 @@
       <block wx:if="{{list.length>0}}">
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="list_box" bindtap="detail" data-id="{{item._id}}">
-                        <image lazy-load class="list_poster" src="{{item.imageList[0]}}"></image>
+                        <!-- <image lazy-load class="list_poster" src="{{item.imageList[0]}}"></image> -->
                          <!--云图片调用-->
-                        <!-- <image lazy-load class="card_poster" src="{{item.images_fileID[0]}}"></image> -->
+                        <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
                         <view class="list_content">
                               <view class="list_word">
                                     <view class="list_title text-cut">{{item.name }}

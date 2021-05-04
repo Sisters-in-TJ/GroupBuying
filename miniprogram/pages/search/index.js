@@ -60,7 +60,7 @@ choosekey(e) {
                 options: 'i',
           }),
           need: _.neq(0),
-        //dura: _.gt(new Date().getTime()),
+          dura: _.gt(new Date().getTime()),
     }).orderBy('creat', 'desc').limit(20).get({
           success: res => {
                 wx.hideLoading();

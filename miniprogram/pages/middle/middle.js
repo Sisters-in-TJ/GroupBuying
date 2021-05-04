@@ -17,7 +17,7 @@ Page({
     imageList:[],
     images_fileID:[],
     loading: false,
-    kind: JSON.parse(config.data).kind.splice(1),
+    kind: JSON.parse(config.data).kind,
     cids: '-1',
     dura: 3,
   },
@@ -58,6 +58,12 @@ Page({
     }else if(that.data.number===""){
       wx.showToast({
         title: '人数不能为空!',
+        icon: 'none',
+        duration: 1500
+      })
+    }else if(that.data.cids== -1){
+      wx.showToast({
+        title: '请选择分类',
         icon: 'none',
         duration: 1500
       })
@@ -111,9 +117,17 @@ Page({
             ...this.data.List,
             {
               _id: res._id,
-              _openid: this.data.openid,
+              _openid: this.data.openid,  
             }
           ],
+          name:'',
+          thing:'',
+          address:'',
+          price:'',
+          number:'',
+          imageList:[],
+          images_fileID:[],
+          cids: '-1',
         })
         wx.showToast({
           title: '新增记录成功',
