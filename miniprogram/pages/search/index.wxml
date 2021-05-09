@@ -43,7 +43,7 @@
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="list_box" bindtap="detail" data-id="{{item._id}}">
                         <!-- <image class="list_poster" src="{{item.imageList[0]}}"/> -->
-                        <image class="list_poster" src="{{item.images_fileID[0]}}"></image>
+                        <image class="list_poster" src="{{item.images_fileID[0]}}"></image>                       
                         <view class="list_content">
                               <view class="list_word">
                                     <view class="list_title text-cut">{{item.name}}

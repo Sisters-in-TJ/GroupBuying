@@ -6,10 +6,26 @@ App({
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        env: 'cloud1-8gt636nb65be0b4e',
+        env: 'cloud1-7gqeolyoe3270a31',
         traceUser: true,
       })
+    /**
+     * 打开小程序的时候首先获得用户openid
+     */
+    wx.cloud.callFunction({
+      name: 'login',
+      data: {},
+      success: res => {
+        this.globalData.openid = res.result.openid
+      },
+      fail: err => {
+        console.error('[云函数] [login] 调用失败', err)
+      }
+    })     
     }
+
+    
+
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -40,6 +56,7 @@ App({
   },
 
   globalData: {
+    para:0,//用于收藏按钮传参
     systemInfo: null,//客户端设备信息
     userInfo: null,
     tabBar: {//在app.js中的globalData中加入自定义tabbar的参数
@@ -83,5 +100,6 @@ App({
       name: '网购',
       id: 3
     }]
+
   }
 })

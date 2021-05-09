@@ -1,0 +1,69 @@
+<!--pages/detail/detail.wxml-->
+<view class="container">
+    <!-- 用户 openid -->
+  <view class="userinfo">    
+    <block wx:if="{{canIUseOpenData}}" class="userinfo-opendata">
+      <view class="userinfo-block-avatar" bindtap="bindViewTap">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+    </block>
+    <block wx:if="{{canIUseOpenData}}" class="userinfo-opendata">
+      <view class="userinfo-block-nickname" bindtap="bindViewTap">
+        <open-data type="userNickName" ></open-data>
+      </view>
+    </block> 
+  </view>
+<!-- 详细信息 -->
+<text class="space">\n</text>
+  <view class="first" >   
+    <!-- 本地图片调用 -->
+    
+    <!--wx:for是微信数据绑定的一种方式，该数组有多少数据就显示多少个view-->
+    <!--index为每个数据对应的下标-->
+    <swiper indicator-dots="{{indicatorDots}}"
+    autoplay="{{autoplay}}" interval="{{interval}}"
+    duration="{{duration}}">
+        <block wx:for="{{images_fileID}}">
+          <swiper-item>
+            <image src="{{item}}" class="slide_image"
+            style="width:100%;height:100%;"></image>
+          </swiper-item>
+        </block>
+  </swiper>
+  <text class="space">\n</text>  
+
+    
+    <!--image lazy-load class="card_poster" src="{{images_fileID}}"></image-->
+    <!--item就相当于数组名+下标的结合体，适用于调用数组所有数据-->
+            <view class="card_title text-cut">
+              <text class="theme">分类：</text>
+              <text class="content">{{name}}</text>
+            </view>
+            <view class="description">
+              <text class="theme">详情描述：</text>
+              <text class="content">{{thing}}</text>
+            </view>
+            <view class="address">
+              <text class="theme">地址：</text>
+              <text class="content">{{address}}</text>
+            </view>
+            <view class="card_between">              
+                <view class="card_price">
+                  <text class="theme">总价：</text>
+                  <text class="content">￥{{price}}.00元</text>
+                </view>
+            </view>            
+            <view class="card_author text-cut">
+              <text class="theme">{{status}}/{{number}}人</text>                            
+            </view>
+
+            <text class="space">\n</text>  
+
+    <view class="btn-area" id="buttonContainer">
+      <button  formType="submit" 
+      bindtap="join" class="bt">加 入</button>
+      <text class="space">\n</text>
+      <button  bindtap="collect" class="bt">收 藏</button>
+    </view>
+  </view>
+</view>

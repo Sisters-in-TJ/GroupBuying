@@ -5,7 +5,8 @@
     "pages/logs/logs",
     "pages/mine/mine",
     "pages/search/index",
-    "pages/message/index"
+    "pages/message/index",
+    "pages/detail/detail"
   ],
 
   "tabBar": { 

@@ -14,6 +14,7 @@ Page({
    */
   onLoad: function (options) {
     app.editTabbar();
+    console.log(app.globalData.para);
   },
 
   /**

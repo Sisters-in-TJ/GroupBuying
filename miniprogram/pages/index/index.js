@@ -6,7 +6,6 @@ const _ = db.command;
 const config = require("../../config.js");
 Page({
   data: {
-    tabbar: {},//在tabBar的list中配置的页面的.js文件的data中加入tabbar:{}
     kind: JSON.parse(config.data).kind,
     indexCur:-2,
     showList: false,
@@ -147,8 +146,9 @@ kindSelect(e) {
  //跳转详情
 detail(e) {
       let that = this;
+      var detailID=e.currentTarget.dataset.id;
       wx.navigateTo({
-            url: '/pages/detail/detail?scene=' + e.currentTarget.dataset.id,
+            url: '/pages/detail/detail?scene=' + detailID,
       })
 },
 more() {

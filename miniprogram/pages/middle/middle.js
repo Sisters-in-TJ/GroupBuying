@@ -2,6 +2,7 @@
 const app = getApp();
 const db = wx.cloud.database();
 const config = require("../../config.js");
+const _ = db.command;
 Page({
   data: {
     tabbar: {},
@@ -20,6 +21,7 @@ Page({
     kind: JSON.parse(config.data).kind,
     cids: '-1',
     dura: 3,
+    openidList:[],
   },
   onLoad: function (options) {
     app.editTabbar();
@@ -93,8 +95,8 @@ Page({
 
     issuePost(e){
       var that = this
-    var imgeList = that.data.imageList.concat(e.tempFilePaths);
-    db.collection('post').add({
+      var imgeList = that.data.imageList.concat(e.tempFilePaths);
+      db.collection('post').add({
       data: {
         name: this.data.name,
         thing: this.data.thing,
@@ -106,9 +108,10 @@ Page({
         images_fileID: this.data.images_fileID,
         creat: new Date().getTime(),
         key: this.data.name + this.data.thing,
-        status: 0, //已拼几人
+        status: 1, //已拼几人
         need: this.data.number,//还需要几个人
         dura: new Date().getTime() + this.data.dura * (24 * 60 * 60 * 1000),
+        openidList:this.data.openidList,
       },
       success: res => {
         // 在返回结果中会包含新创建的记录的 _id
@@ -117,7 +120,7 @@ Page({
             ...this.data.List,
             {
               _id: res._id,
-              _openid: this.data.openid,  
+              _openid: this.data.openid,               
             }
           ],
           name:'',
@@ -126,13 +129,16 @@ Page({
           price:'',
           number:'',
           imageList:[],
-          images_fileID:[],
+          images_fileID:[],          
+          openidList:[],
           cids: '-1',
         })
+
         wx.showToast({
           title: '新增记录成功',
         })
-        console.log('[数据库] [新增记录] 成功，记录 _id: ', res._id)
+        console.log('[数据库] [新增记录] 成功，记录 _id: ')
+                
       },
       fail: err => {
         wx.showToast({
@@ -145,6 +151,7 @@ Page({
         this.setData({loading: false})
       }
     })
+    
   },
   nameBlur(e) {
     this.setData({
@@ -201,6 +208,7 @@ Page({
         });
       }
     })
+  
   },
   previewImage: function (e) {
     var that = this;
