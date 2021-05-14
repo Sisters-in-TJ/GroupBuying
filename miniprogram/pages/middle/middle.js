@@ -34,29 +34,7 @@ Page({
     if (this.data.loading) {
       return
     }
-    wx.cloud.callFunction({
-      name:'get',
-      data:{
-        message:'get',
-      }
-    }).then(res=>{
-      this.setData({
-        openid:res.result.openid,   
-     })
-    }).then(()=>{
-    db.collection('user').where({
-      _openid:that.data.openid,
-    })
-    .get({
-      success: res =>{
-        console.log(res)
-        console.log(res.data.length)
-        this.setData({
-           l_length:res.data.length       
-        })  
-      }
-    })
-  })
+    
     this.setData({loading: true})
     if(that.data.name === ""){
       wx.showToast({
@@ -101,20 +79,39 @@ Page({
         title: '提示',
         content: '你确定要提交吗',
         success: function (res) {
-          console.log("obj", res)
-          
+          console.log("obj", res)   
           if (res.confirm) {
             console.log('用户点击确定')
-            
-            console.log(that.data.l_length)
-            if(that.data.l_length === 0){
-              wx.showToast({
+            wx.cloud.callFunction({
+              name:'get',
+              data:{
+                message:'get',
+              }
+            }).then(res=>{
+              that.setData({
+                openid:res.result.openid,   
+             })
+            }).then(()=>{
+            db.collection('user').where({
+              _openid:that.data.openid,
+            })
+            .get({
+              success: res =>{
+                console.log(res)
+                console.log(res.data.length)
+                 if(res.data.length == 0){
+                 wx.showToast({
                 icon: 'none',
                 title: '该用户尚未注册，请注册后再发布'
               })
             } else {
               that.issuePost(e);
             }
+          
+              }
+            })
+          })
+            
           } else {
             console.log('用户点击取消')
           }
@@ -179,7 +176,9 @@ Page({
             openid:res.result.openid,   
          })
         }).then(()=>{
-        db.collection('user').where({
+          console.log(res._id)
+          console.log(that.data.openid,)
+          db.collection('user').where({
           _openid:that.data.openid,
         }).update({
           data: {
