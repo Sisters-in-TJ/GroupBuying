@@ -1,5 +1,5 @@
 // pages/detail/detail.js
-const db = wx.cloud.database({env: 'cloud1-7gqeolyoe3270a31'});
+const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
 const cont = db.collection('post');
 const app=getApp();
 
@@ -30,15 +30,18 @@ Page({
     imageList:'',
     id:'',
     _openid:'',
+    openid:'',
     openidList:'',
     judge:'',
     user_id:'',
     user_openid:'',
+    addidlist:[],
     need:'',
     indicatorDots:true,
     autoplay:false,
     interval:1000,
     duration:2000,
+    l_length:0
     },
 
     
@@ -70,14 +73,45 @@ Page({
       })
     },    
         
+    
     join:function(){
       var that=this
+      wx.cloud.callFunction({
+        name:'get',
+        data:{
+          message:'get',
+        }
+      }).then(res=>{
+        console.log(res.result.openid)
+        this.setData({
+          openid:res.result.openid        
+       })
+      }).then(()=>{
+      db.collection('user').where({
+        _openid:that.data.openid,
+      })
+      .get({
+        success: res =>{
+          console.log(res)
+          console.log(res.data.length)
+          this.setData({
+             l_length:res.data.length       
+          })  
+        }
+      })
+    }).then(()=>{
       db.collection('post').where({
         _id:that.data.id,
         _openid:that.data._openid,                
         openidList:app.globalData.openid,
       }).get({
         success:function(res){
+          if(that.data.l_length===0){
+            wx.showToast({
+              icon: 'none',
+              title: '该用户尚未注册，请注册后操作'
+            })
+          }else{
                    
           //console.log('!!!!!!!!!!',that.data.openidList);
           //console.log('!!!!!!!!!!!',res.data.length)
@@ -120,8 +154,16 @@ Page({
                 db.collection('post').doc(that.data.id).update({
                   data: {
                     status:that.data.status,
-                    openidList:_.push([app.globalData.openid]),
+                    openidList:_.push([that.data.openid]),
                     need:that.data.number-that.data.status,
+                  }
+                },
+                )
+                db.collection('user').where({
+                  _openid: that.data.openid
+                }).update({
+                  data: {
+                    addidList:_.push([that.data.id]),
                   }
                 },
                 )
@@ -144,20 +186,89 @@ Page({
         }     
       }
           }
+          }
         }
       })
-      console.log(app.globalData.openid);
-      //console.log('id:',that.data.id,'openid:',that.data._openid);        
+    })   
     },
 
     collect:function(){
-      wx.showToast({
-        title: '收藏成功',
-        icon:'success',
-        duration:2000
+      var that=this
+      wx.cloud.callFunction({
+        name:'get',
+        data:{
+          message:'get',
+        }
+      }).then(res=>{
+        console.log(res.result.openid)
+        this.setData({
+          openid:res.result.openid        
+       })
+      }).then(()=>{
+      db.collection('user').where({
+        _openid:that.data.openid,
       })
-      app.globalData.para=this.data.id
-      
-    },
+      .get({
+        success: res =>{
+          console.log(res)
+          console.log(res.data.length)
+          this.setData({
+             l_length:res.data.length       
+          })  
+        }
+      })
+    }).then(()=>{
+      db.collection('post').where({
+        _id:that.data.id,
+        _openid:that.data._openid,                
+        openidList:app.globalData.openid,
+      }).get({
+        success:function(res){
+          console.log(that.data.l_length)
+          if(that.data.l_length==0){
+            wx.showToast({
+              icon: 'none',
+              title: '该用户尚未注册，请注册后操作'
+            })
+          }else{
+              wx.showModal({
+              title:'提示',
+              content:'您确定要收藏拼单吗',
+              cancelColor: 'cancelColor',
+              success: function(res) {
+              //console.log(res);
+              if (res.confirm) {
 
-})
+                console.log('用户点击确定');        
+                console.log(that.data.openid);
+                console.log(that.data.id);
+                db.collection('user').where({
+                  _openid:that.data.openid
+                }).update({
+                  data: {
+                    collectidlist:_.push([that.data.id]),
+                  }
+                },
+                )
+                wx.showToast({
+                title: '收藏成功',
+                duration: 2000,
+                icon: 'success',             
+                mask: true,
+                
+                })
+                //console.log('after=>',that.data.openidList)              
+              } else if (res.cancel) {
+
+                console.log('用户点击取消',that.data.status);
+               
+              }
+              }
+              })         
+          }
+        }, 
+      })
+    })
+    } 
+  
+  })

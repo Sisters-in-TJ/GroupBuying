@@ -1,9 +1,10 @@
 // index.js
 // 获取应用实例
 const app = getApp()
-const db = wx.cloud.database();
+const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
 const _ = db.command;
 const config = require("../../config.js");
+
 Page({
   data: {
     kind: JSON.parse(config.data).kind,
@@ -106,7 +107,7 @@ kindSelect(e) {
     }
   },
 
-  getList() {
+  getList() { 
   let that = this;
   if (that.data.indexCur == -2) {
         var index = _.neq(-2); //除-2之外所有

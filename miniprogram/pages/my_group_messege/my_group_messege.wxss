@@ -1,0 +1,118 @@
+/* miniprogram/pages/my_group_messege/my_group_messege.wxss */
+.navigator {
+  width: 100%;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  height:50px;
+}
+.title{
+  
+  padding-left: 10px;
+}
+
+
+.detail2 {
+  font-size: 15px;
+  position: absolute;
+  right: 10px;
+  height: 50px;
+  line-height: 50px;
+  color: #888;
+}
+.kind_img {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.kind_img image {
+  position:absolute;
+  right: 10px;
+  width: 32rpx;
+  height: 32rpx;
+}
+.kindlist_box {
+  position: relative;
+  width: 100%;
+  left: 0rpx;
+  padding-left: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1rpx solid #eee;
+}
+.theme{
+  padding-bottom: 5px;
+}
+.line {
+  border: 1px solid #ccc;
+  opacity: 0.2;
+}
+.list{
+  padding-top:5px
+}
+
+.list_one {
+  width: 100%;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.list_poster {
+  width: 60px;
+  height: 60px;
+}
+
+.list_content {
+  height: 60px;
+  width: calc(100% - 230rpx);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  
+  box-sizing: border-box;
+}
+
+.list_word {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  
+  box-sizing: border-box;
+}
+
+.list_title {
+  right: 10px;
+  font-size: 30rpx;
+  
+  line-height: 45rpx;
+}
+
+.list_author {
+  
+  right: 20px;
+  
+  font-size: 30rpx;
+  
+  line-height: 40rpx;
+  color: rgb(129, 129, 129);
+}
+
+.list_between {
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+ 
+  padding-bottom: 10rpx;
+}
+
+.list_price {
+  font-size: 30rpx;
+  color: rgb(255, 0, 0);
+}
+
