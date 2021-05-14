@@ -1,0 +1,87 @@
+<!--miniprogram/pages/my_group_messege/my_group_messege.wxml-->
+<view class="line"></view>
+<view class='item'>
+    <view class="kind_img" bindtap="showadd">
+          <view class="title">我加入的</view>    
+            <image lazy-load src="{{showadd?'/images/l_down.png':'/images/l_right.png'}}" />
+        </view>      
+</view>
+<view class="kindlist_box" wx:if="{{showadd}}"> 
+   <view class="list" wx:if="{{listadd.length>0}}">
+        <block wx:for="{{listadd}}" wx:key="_id">
+          <view class="line"></view>
+            <view class="list_one" bindtap="detail" data-id="{{item._id}}">
+              <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
+              <view class="list_content">
+                  <view class="list_word">
+                    <view class="list_title text-cut">{{item.name }}</view>
+                    <view class="list_author text-cut">{{item.status}}/{{item.number}}人</view>
+                  </view>
+                  <view class="list_between">
+                    <view class="list_price">￥{{item.price}}.00元</view>
+                   </view>
+              </view>
+            </view>
+        </block>
+      </view>
+            
+</view>
+
+<view class="line"></view>
+<view class='item'>
+    <view class="kind_img" bindtap="showcollect">
+          <view class="title">我收藏的</view>    
+            <image lazy-load src="{{showcollect?'/images/l_down.png':'/images/l_right.png'}}" />
+        </view>      
+</view>
+<view class="kindlist_box" wx:if="{{showcollect}}"> 
+   <view class="list" wx:if="{{listcollect.length>0}}">
+        <block wx:for="{{listcollect}}" wx:key="_id">
+          <view class="line"></view>
+            <view class="list_one" bindtap="detail" data-id="{{item._id}}">
+              <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
+              <view class="list_content">
+                  <view class="list_word">
+                    <view class="list_title text-cut">{{item.name }}</view>
+                    <view class="list_author text-cut">{{item.status}}/{{item.number}}人</view>
+                  </view>
+                  <view class="list_between">
+                    <view class="list_price">￥{{item.price}}.00元</view>
+                   </view>
+              </view>
+            </view>
+        </block>
+      </view>
+            
+</view>
+
+<view class="line"></view>
+<view class='item'>
+    <view class="kind_img" bindtap="showpublish">
+          <view class="title">我发布的</view>    
+            <image lazy-load src="{{showpublish?'/images/l_down.png':'/images/l_right.png'}}" />
+        </view>      
+</view>
+<view class="kindlist_box" wx:if="{{showpublish}}"> 
+   <view class="list" wx:if="{{listpublish.length>0}}">
+        <block wx:for="{{listpublish}}" wx:key="_id">
+          <view class="line"></view>
+            <view class="list_one" bindtap="detail" data-id="{{item._id}}">
+              <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
+              <view class="list_content">
+                  <view class="list_word">
+                    <view class="list_title text-cut">{{item.name }}</view>
+                    <view class="list_author text-cut">{{item.status}}/{{item.number}}人</view>
+                  </view>
+                  <view class="list_between">
+                    <view class="list_price">￥{{item.price}}.00元</view>
+                   </view>
+              </view>
+            </view>
+        </block>
+      </view>
+            
+</view>
+
+<view class="line"></view>
+

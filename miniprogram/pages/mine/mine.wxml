@@ -1,3 +1,118 @@
-<view class="container">
-  <text>我的页面</text>
+
+<view class="background">
+  <view class="head">
+    <view class="userinfo">
+    <block wx:if="{{!hasUserInfo}}">
+       <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile" class="userinfo-btn"> 获取头像昵称 </button>
+      </block>
+     <block wx:else>
+      <view class="userinfo-block" bindtap="bindViewTap">
+       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+       </view>
+       <view class="userinfo-block" bindtap="bindViewTap">
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+        </view>
+        <view class="complete_messege">
+      
+      <navigator url="../complete_messege/complete_messege" open-type="navigate" >
+        <view class="userinfo-block-complete" bindtap="bindViewTap">
+        <text>完善个人信息并注册</text>
+        </view>
+      </navigator>
+    
+  </view>
+  </block>
 </view>
+    
+  </view>
+
+</view>
+
+<view class="line"></view>
+<view class='item'>
+  <view class="kind" >
+    <view class="title">性别</view>
+      <view class="detail2">
+        <text>{{gender}}</text>
+      </view>
+   </view>
+</view>
+
+<view class="line"></view>
+
+<view class='item'>
+    <view class="kind" bindtap="showcontactway">
+          <view class="title">联系方式</view>    
+            <image lazy-load src="{{showcontactway?'/images/l_down.png':'/images/l_right.png'}}" />
+        </view>      
+</view>
+<view class="kindlist_box" wx:if="{{showcontactway}}">       
+  <view class="line"></view> 
+    <view class="list">
+      <text class="content">电话号码：</text>
+      <text class="content">{{phonenumber}}</text>
+    </view>
+    <view class="line"></view>
+    <view class="list">
+      <text class="content">邮箱:</text>
+      <text class="content">{{emails}}</text>
+    </view>
+            
+</view>
+
+<view class="line"></view>
+
+<view class='item'>
+    <view class="kind" bindtap="showaddress">
+          <view class="title">地址</view>    
+            <image lazy-load src="{{showaddress?'/images/l_down.png':'/images/l_right.png'}}" />
+        </view>      
+</view>
+<view class="kindlist_box" wx:if="{{showaddress}}">
+  <view class="line"></view>
+    <view class="list">
+              <text class="content">地址:</text>
+              <text class="content">{{address}}</text>
+              </view>
+        </view>
+
+<view class="line"></view>
+
+<view class='item'>
+  <view class="kind" >
+  <navigator url="../my_group_messege/my_group_messege" open-type="navigate" class="navigator">
+    <view class="title">我的拼单</view>
+      <view class="detail2">
+        <text></text>
+      </view>
+  </navigator>
+  </view>
+</view>
+
+<view class="line"></view>
+
+<view class='item'>
+  <view class="kind">
+  <navigator url="../personinfo/personinfo" open-type="navigate" class="navigator">
+    <view class="title">意见反馈</view>
+      <view class="detail2">
+        <text></text>
+      </view>
+  </navigator>
+  </view>
+</view>
+
+<view class="line"></view>
+
+<view class='item'>
+  <view class="kind" >
+  <navigator url="../personinfo/personinfo" open-type="navigate" class="navigator">
+    <view class="title">设置</view>
+      <view class="detail2">
+        <text></text>
+      </view>
+  </navigator>
+  </view>
+</view>
+
+<view class="hr"></view>

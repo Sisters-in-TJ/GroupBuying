@@ -1,30 +1,31 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/middle/middle",
     "pages/logs/logs",
     "pages/mine/mine",
     "pages/search/index",
     "pages/message/index",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/complete_messege/complete_messege",
+    "pages/my_group_messege/my_group_messege"
   ],
-
-  "tabBar": { 
+  "tabBar": {
     "backgroundColor": "#ffffff",
     "color": "#979795",
     "selectedColor": "#1c1c1b",
     "list": [
       {
-      "pagePath": "pages/index/index",
-      "text": "首页",
-      "iconPath": "/images/icon_home.png",
-      "selectedIconPath": "/images/icon_home_HL.png"
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/images/icon_home.png",
+        "selectedIconPath": "/images/icon_home_HL.png"
       },
       {
         "pagePath": "pages/middle/middle",
         "text": "发布",
         "iconPath": "/images/off.png",
-        "selectedIconPath":"/images/icon_release.png"
+        "selectedIconPath": "/images/icon_release.png"
       },
       {
         "pagePath": "pages/message/index",
@@ -40,21 +41,20 @@
       }
     ]
   },
-
-  "window":{
+  "window": {
     "backgroundColor": "#FFE700",
-    "backgroundTextStyle":"light",
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFE700",
     "navigationBarTitleText": "GroupBuying",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-      "usingComponents": {
-            "van-steps": "vant/steps/index",
-            "van-transition": "vant/transition/index",
-            "van-stepper": "vant/stepper/index",
-            "van-action-sheet": "vant/action-sheet/index",
-            "van-popup": "vant/popup/index"
-      }
+  "usingComponents": {
+    "van-steps": "vant/steps/index",
+    "van-transition": "vant/transition/index",
+    "van-stepper": "vant/stepper/index",
+    "van-action-sheet": "vant/action-sheet/index",
+    "van-popup": "vant/popup/index"
+  }
 }

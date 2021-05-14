@@ -1,0 +1,31 @@
+<!--miniprogram/pages/complete_messege/complete_messege.wxml-->
+<view class="complete">
+  <form bindsubmit="createUser">
+    <view class="b_ccontent">
+      <view class="b_card">
+        <view class="b_bar">
+          <view class="weui-label">联系方式</view>
+          <view class="b_picker">
+            <input placeholder="电话号码" value="{{phonenumber}}" bindblur="phonenumberBlur"/>
+          </view>
+        </view>
+        <view class="b_border"></view>
+        <view class="b_bar">
+          <view class="weui-label">邮箱</view>
+          <view class="b_picker">
+            <input placeholder="邮箱" value="{{emails}}" bindblur="emailsBlur"/>
+          </view>
+        </view>
+        <view class="b_border"></view>
+        <view class="b_bar">
+          <view class="weui-label">地址</view>
+          <view class="b_picker">
+            <input placeholder="地址" value="{{address}}" bindblur="addressBlur"/>
+           </view>
+        </view>
+        <view class="b_border"></view>
+      </view>
+    </view>
+    <button class="b_publish" type="primary" formType="submit">提交注册</button>
+  </form>
+</view>

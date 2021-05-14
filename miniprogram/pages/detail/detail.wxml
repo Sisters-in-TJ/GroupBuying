@@ -1,18 +1,6 @@
 <!--pages/detail/detail.wxml-->
 <view class="container">
-    <!-- 用户 openid -->
-  <view class="userinfo">    
-    <block wx:if="{{canIUseOpenData}}" class="userinfo-opendata">
-      <view class="userinfo-block-avatar" bindtap="bindViewTap">
-        <open-data type="userAvatarUrl"></open-data>
-      </view>
-    </block>
-    <block wx:if="{{canIUseOpenData}}" class="userinfo-opendata">
-      <view class="userinfo-block-nickname" bindtap="bindViewTap">
-        <open-data type="userNickName" ></open-data>
-      </view>
-    </block> 
-  </view>
+  
 <!-- 详细信息 -->
 <text class="space">\n</text>
   <view class="first" >   

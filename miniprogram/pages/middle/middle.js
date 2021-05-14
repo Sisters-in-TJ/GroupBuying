@@ -16,12 +16,15 @@ Page({
     price:'',
     number:'',
     imageList:[],
+    _id:'',
     images_fileID:[],
     loading: false,
     kind: JSON.parse(config.data).kind,
     cids: '-1',
     dura: 3,
     openidList:[],
+    publishidlist:[],
+    l_length:0,
   },
   onLoad: function (options) {
     app.editTabbar();
@@ -31,6 +34,29 @@ Page({
     if (this.data.loading) {
       return
     }
+    wx.cloud.callFunction({
+      name:'get',
+      data:{
+        message:'get',
+      }
+    }).then(res=>{
+      this.setData({
+        openid:res.result.openid,   
+     })
+    }).then(()=>{
+    db.collection('user').where({
+      _openid:that.data.openid,
+    })
+    .get({
+      success: res =>{
+        console.log(res)
+        console.log(res.data.length)
+        this.setData({
+           l_length:res.data.length       
+        })  
+      }
+    })
+  })
     this.setData({loading: true})
     if(that.data.name === ""){
       wx.showToast({
@@ -76,9 +102,19 @@ Page({
         content: '你确定要提交吗',
         success: function (res) {
           console.log("obj", res)
+          
           if (res.confirm) {
-            that.issuePost(e);
             console.log('用户点击确定')
+            
+            console.log(that.data.l_length)
+            if(that.data.l_length === 0){
+              wx.showToast({
+                icon: 'none',
+                title: '该用户尚未注册，请注册后再发布'
+              })
+            } else {
+              that.issuePost(e);
+            }
           } else {
             console.log('用户点击取消')
           }
@@ -133,7 +169,28 @@ Page({
           openidList:[],
           cids: '-1',
         })
-
+        wx.cloud.callFunction({
+          name:'get',
+          data:{
+            message:'get',
+          }
+        }).then(res=>{
+          this.setData({
+            openid:res.result.openid,   
+         })
+        }).then(()=>{
+        db.collection('user').where({
+          _openid:that.data.openid,
+        }).update({
+          data: {
+            publishidlist:_.push([res._id]),
+          },
+          success:function(res){
+            console.log("更新成功",res.data)
+          }
+        },
+        )
+      })
         wx.showToast({
           title: '新增记录成功',
         })
