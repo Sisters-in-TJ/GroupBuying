@@ -6,7 +6,7 @@ App({
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        env: 'cloud1-9g9q4zpg30ad44b8',
+        env: 'cloud1-3go8mya6a6d9ae16',
         traceUser: true,
       })
       /**
@@ -83,7 +83,7 @@ App({
     para:0,//用于收藏按钮传参
     systemInfo: null,//客户端设备信息
     userInfo: null,
-    appid: 'wxc0c02c6be5ccd4b0',
+    appid: 'wx00ea7f5b6d650d05',
     tabBar: {//在app.js中的globalData中加入自定义tabbar的参数
       "backgroundColor": "#ffffff",
       "color": "#979795",
