@@ -1,7 +1,7 @@
 // index.js
 // 获取应用实例
 const app = getApp()
-const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
+const db = wx.cloud.database();
 const _ = db.command;
 const config = require("../../config.js");
 

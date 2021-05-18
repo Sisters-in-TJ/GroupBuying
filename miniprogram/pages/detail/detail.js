@@ -1,5 +1,5 @@
 // pages/detail/detail.js
-const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
+const db = wx.cloud.database();
 const cont = db.collection('post');
 const app=getApp();
 
@@ -71,50 +71,37 @@ Page({
           })
         }
       })
+
+      
+    let a = this.getOpenID().then(res=>{
+      wx.cloud.callFunction({
+        name: 'getInfo',
+        data: {
+          openid:res
+        },
+        success: result => {
+          this.setData({
+            userInfo:result.result.data[0]
+          })
+          console.log(this.data.userInfo)
+        },
+        fail: err => {
+          console.error('[云函数] [getInfo] 调用失败：', err)
+        }
+      })
+    })
+      
     },    
         
     
     join:function(){
       var that=this
-      wx.cloud.callFunction({
-        name:'get',
-        data:{
-          message:'get',
-        }
-      }).then(res=>{
-        console.log(res.result.openid)
-        this.setData({
-          openid:res.result.openid        
-       })
-      }).then(()=>{
-      db.collection('user').where({
-        _openid:that.data.openid,
-      })
-      .get({
-        success: res =>{
-          console.log(res)
-          console.log(res.data.length)
-          this.setData({
-             l_length:res.data.length       
-          })  
-        }
-      })
-    }).then(()=>{
       db.collection('post').where({
         _id:that.data.id,
         _openid:that.data._openid,                
         openidList:app.globalData.openid,
       }).get({
         success:function(res){
-          if(that.data.l_length===0){
-            wx.showToast({
-              icon: 'none',
-              title: '该用户尚未注册，请注册后操作'
-            })
-          }else{
-                   
-          //console.log('!!!!!!!!!!',that.data.openidList);
-          //console.log('!!!!!!!!!!!',res.data.length)
           if(res.data.length>0){//用户已加入拼单
             wx.showToast({
               title: '您已加入该拼单！',
@@ -149,26 +136,15 @@ Page({
               if (res.confirm) {
 
                 console.log('用户点击确定');
-                that.data.status++,          
-                console.log('after=>',that.data.status,that.data.id);
-                db.collection('post').doc(that.data.id).update({
-                  data: {
-                    status:that.data.status,
-                    openidList:_.push([that.data.openid]),
-                    need:that.data.number-that.data.status,
-                  }
-                },
-                )
-                db.collection('user').where({
-                  _openid: that.data.openid
-                }).update({
-                  data: {
-                    addidList:_.push([that.data.id]),
-                  }
-                },
-                )
+                
+                var contact=that.data._openid;
+                console.log(contact);
+                that.sendRequest()
+                wx.navigateTo({
+                  url: '../messagePage/room/room?contact='+contact,
+                })
                 wx.showToast({
-                title: '加入成功',
+                title: '申请加入成功',
                 duration: 2000,
                 icon: 'success',             
                 mask: true,
@@ -187,9 +163,7 @@ Page({
       }
           }
           }
-        }
-      })
-    })   
+        })
     },
 
     collect:function(){
@@ -269,6 +243,69 @@ Page({
         }, 
       })
     })
-    } 
+    },
+
+    // 将请求加入的信息存入数据库
+  sendRequest: function(event){
+    var that=this
+    const db = wx.cloud.database()
+    let a = that.getOpenID().then(res=>{
+      var oppoid=that.data._openid
+      var groupid=''
+      if (oppoid<res){
+        groupid=oppoid+'_'+res
+      }
+      else{
+        groupid=res+'_'+oppoid
+      }
+      const doc = {
+        _id: `${Math.random()}_${Date.now()}`,
+        groupId: groupid,
+        avatar: this.data.userInfo.avatarUrl,  //获得userinfo
+        nickName: this.data.userInfo.name,
+        msgType: 'request',  // 'request' 'text'
+        textContent: this.data.id,
+        sendTime: new Date(),
+        sendTimeTS: Date.now(), // fallback
+        requestStatus: 0, //default:0, accept:1, reject:2, cancel:3
+        postImage: this.data.imageList[0],
+        postName:this.data.name,
+        postThing:this.data.thing
+      }
+     db.collection("chatroom").add({
+        data: doc,
+      })
+      this.addContact(res,oppoid)
+    })
+  },
+
+  addContact:function(id1,id2){
+    //调用addContact，更新user
+    wx.cloud.callFunction({
+      name: 'addContact',
+      data: {
+        id1:id1,
+        id2:id2
+      },
+      success: res => {
+        console.log('联系人加入成功')
+      },
+      fail: err => {
+        console.error('[云函数] [addContact] 调用失败：', err)
+      }
+    })
+  },
+
+  getOpenID: async function() {
+    if (this.openid) {
+      return this.openid
+    }
+
+    const { result } = await wx.cloud.callFunction({
+      name: 'login',
+    })
+
+    return result.openid
+  },
   
-  })
+})

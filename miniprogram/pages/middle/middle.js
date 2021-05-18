@@ -136,13 +136,13 @@ Page({
         index: this.data.cids,
         address: this.data.address,
         price: this.data.price,
-        number: this.data.number,
+        number: Number(this.data.number),
         imageList: this.data.imageList,
         images_fileID: this.data.images_fileID,
         creat: new Date().getTime(),
         key: this.data.name + this.data.thing,
         status: 1, //已拼几人
-        need: this.data.number,//还需要几个人
+        need: Number(this.data.number)-1,//还需要几个人
         dura: new Date().getTime() + this.data.dura * (24 * 60 * 60 * 1000),
         openidList:this.data.openidList,
       },

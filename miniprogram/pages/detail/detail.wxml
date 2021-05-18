@@ -50,7 +50,17 @@
     <view class="btn-area" id="buttonContainer">
       <button  formType="submit" 
       bindtap="join" class="bt">加 入</button>
+      <!-- <navigator url="../messagePage/room/room?contact={{_openid}}" open-type="navigate">
+      <button bindtap='sendRequest' class="bt">加入</button> -->
+      <!-- 传参拼单id -->
+      <!-- </navigator> -->
       <text class="space">\n</text>
+
+      <navigator url="../messagePage/room/room?contact={{_openid}}&request=false" open-type="navigate">
+        <button class="bt">聊 天</button>
+      </navigator>
+      <text class="space">\n</text>
+
       <button  bindtap="collect" class="bt">收 藏</button>
     </view>
   </view>

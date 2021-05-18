@@ -1,5 +1,5 @@
 // pages/mine/mine.js
-const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
+const db = wx.cloud.database();
 const cont = db.collection('user');
 const app=getApp();
 const _ = db.command;
@@ -96,6 +96,7 @@ Page({
       _openid:that.data.openid,
     }).get({
       success: res =>{
+          console.log(res.data[0]),
         this.setData({
            phonenumber:res.data[0].phonenumber, 
            emails:res.data[0].emails         

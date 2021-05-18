@@ -1,5 +1,5 @@
 // miniprogram/pages/my_group_messege/my_group_messege.js
-const db = wx.cloud.database({env: 'hyjcloudenv-4g574o4z8bbb7c01'});
+const db = wx.cloud.database();
 const cont = db.collection('user');
 const app=getApp();
 const _ = db.command;

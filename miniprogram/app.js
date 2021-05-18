@@ -6,25 +6,24 @@ App({
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        env: 'hyjcloudenv-4g574o4z8bbb7c01',
+        env: 'cloud1-9g9q4zpg30ad44b8',
         traceUser: true,
       })
-    /**
-     * 打开小程序的时候首先获得用户openid
-     */
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        this.globalData.openid = res.result.openid
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-      }
-    })     
+      /**
+       * 打开小程序的时候首先获得用户openid
+       */
+      wx.cloud.callFunction({
+        name: 'login',
+        data: {},
+        success: res => {
+          this.globalData.openid = res.result.openid
+          // this.initWatcher(res.result.openid)
+        },
+        fail: err => {
+          console.error('[云函数] [login] 调用失败', err)
+        }
+      })
     }
-
-    
 
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
@@ -38,6 +37,31 @@ App({
       }
     })
   },
+
+  // initWatcher: function(openid){//监听新消息
+  //   console.log(openid)
+  //   const db = wx.cloud.database()
+  //   const watcher = db.collection('user').doc(openid)
+  //     .watch({
+  //       onChange: function(snapshot) {
+  //         console.log('user-snapshot', snapshot)
+  //         if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
+  //           wx.showTabBarRedDot({
+  //             index: 2,
+  //           })
+  //         }
+  //         else{
+  //           wx.hideTabBarRedDot({
+  //             index: 2,
+  //           })
+  //         }
+  //       },
+  //       onError: function(err) {
+  //         console.error('the watch closed because of error', err)
+  //       }
+  //     })
+  // },
+
 
   //加入一个方法给tabBar.list配置中的页面使用
   editTabbar: function () {
@@ -59,7 +83,7 @@ App({
     para:0,//用于收藏按钮传参
     systemInfo: null,//客户端设备信息
     userInfo: null,
-    appid: 'wxcaef93019b4c8cfa',
+    appid: 'wxc0c02c6be5ccd4b0',
     tabBar: {//在app.js中的globalData中加入自定义tabbar的参数
       "backgroundColor": "#ffffff",
       "color": "#979795",

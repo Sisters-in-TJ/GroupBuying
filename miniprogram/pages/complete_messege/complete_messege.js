@@ -21,6 +21,8 @@ Page({
     addidlist:[],
     collectidlist:[],
     finishidlist:[],
+    contactlist:[],
+    newmessagelist:[],
     l_length:0,
   },
   /**
@@ -137,6 +139,8 @@ Page({
         addidlist:this.data.addidlist,
         collectidlist:this.data.collectidlist,
         finishidlist:this.data.finishidlist,
+        contactlist:this.data.contactlist,
+        newmessagelist:this.data.newmessagelist,
       },
       success: res => {
         this.setData({
