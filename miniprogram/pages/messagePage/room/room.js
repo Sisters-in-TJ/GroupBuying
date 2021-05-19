@@ -2,6 +2,8 @@ const app = getApp()
 
 Page({
   data: {
+    oppoid:'',
+    openid:'',
     avatarUrl: './user-unlogin.png',
     userInfo: null,
     logged: false,
@@ -22,12 +24,6 @@ Page({
 
   onLoad: function(options) {
 
-    // if(options.request=="true"){
-    //   this.setData({
-    //     sendRequest: true,
-    //   })
-    // }
-    // 获得groupid
     let a = this.getOpenID().then(res=>{
       var oppoid=options.contact
       console.log(oppoid)
@@ -40,6 +36,8 @@ Page({
         groupid=res+'_'+oppoid
       }
       this.setData({
+        oppoid:oppoid,
+        openid:res,
         chatRoomGroupId: groupid,
       })
 
@@ -122,6 +120,44 @@ Page({
     })
 
     return result.openid
+  },
+
+  onUnload: function () {
+    console.log("---------")
+    this.deleteNewMessageList(this.data.openid,this.data.oppoid)
+  },
+  deleteNewMessageList: function(openid,oppoid){
+    console.log(openid,oppoid)
+    const db = wx.cloud.database()
+    const user = db.collection('user')
+    const _ = db.command
+    var list=[]
+    user.where({
+      _openid: openid
+    }).get({
+      success(res) {
+        list=res.data[0].newmessagelist
+        for(var i=0;i<list.length;i++){
+          if(list[i]==oppoid){
+            console.log(oppoid)
+            list.splice(i,1)
+            user.where({
+              _openid: openid
+            }).update({
+              data: {
+                newmessagelist: list
+              },
+              success: res => {
+              },
+              fail: err => {
+                console.error('[数据库] [更新记录] 失败：', err)
+              }
+            })
+            break
+          }
+        }
+      },
+    })
   },
 
   onGetUserInfo: function(e) {

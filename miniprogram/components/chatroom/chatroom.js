@@ -80,9 +80,49 @@ Component({
           sendTimeTS: _.gt(initList[initList.length - 1].sendTimeTS),
         } : {})
 
+        var list=this.data.groupId.split('_',2)
+        var oppoId
+        for(var i=0;i<list.length;i++){
+          if(list[i]!=this.data.openId)
+            oppoId=list[i]
+        }
+        // this.deleteNewMessageList(this.data.openId,oppoId)
       }, '初始化失败')
     },
 
+    
+  deleteNewMessageList: function(openid,oppoid){
+    const db = wx.cloud.database()
+    const user = db.collection('user')
+    const _ = db.command
+    var list=[]
+    user.where({
+      _openid: openid
+    }).get({
+      success(res) {
+        list=res.data[0].newmessagelist
+        for(var i=0;i<list.length;i++){
+          if(list[i]==oppoid){
+            console.log(oppoid)
+            list.splice(i,1)
+            user.where({
+              _openid: openid
+            }).update({
+              data: {
+                newmessagelist: list
+              },
+              success: res => {
+              },
+              fail: err => {
+                console.error('[数据库] [更新记录] 失败：', err)
+              }
+            })
+            break
+          }
+        }
+      },
+    })
+  },
     async initOpenID() {
       return this.try(async () => {
         const openId = await this.getOpenID()
@@ -195,7 +235,7 @@ Component({
         }
         
         // 添加newmessagelist
-        if (hasOthersMessage){
+        // if (hasOthersMessage){
           var list=this.data.groupId.split('_',2)
           var oppoId
           for(var i=0;i<list.length;i++){
@@ -215,7 +255,7 @@ Component({
               console.error('[云函数] [addNewMessage] 调用失败：', err)
             }
           })
-        }
+        // }
       }
     },
 

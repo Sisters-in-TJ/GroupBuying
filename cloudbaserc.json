@@ -1,0 +1,130 @@
+{
+  "envId": "{{env.ENV_ID}}",
+  "version": "2.0",
+  "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
+  "framework": {
+    "name": "group-buying-framework",
+    "requirement": {
+      "environment": {
+        "WX_APPID": {
+          "description": "请填写微信小程序APPID",
+          "required": true,
+          "default": "",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^wx.*",
+              "flag": "g"
+            },
+            "errorMessage": "必须是小程序的APPID"
+          }
+        },
+        "WX_CI_KEY": {
+          "description": "请填写微信小程序上传密钥BASE64",
+          "required": true,
+          "default": "",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+              "flag": "g"
+            },
+            "errorMessage": "必须是BASE64格式密钥"
+          }
+        }
+      }
+    },
+    "plugins": {
+      "fn": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {
+          "functionRootPath": "./cloudfunctions",
+          "functions": [
+            {
+              "name": "addContact",
+              "installDependency": true
+            },
+            {
+              "name": "addNewMessage",
+              "installDependency": true
+            },
+            {
+              "name": "get",
+              "installDependency": true
+            },
+            {
+              "name": "getInfo",
+              "installDependency": true
+            },
+            {
+              "name": "getPostInfo",
+              "installDependency": true
+            },
+            {
+              "name": "login",
+              "installDependency": true
+            }
+          ]
+        }
+      }
+    },
+    "db":{
+      "use": "@cloudbase/framework-plugin-database",
+      "inputs": {
+        "collections": [
+          {
+            "collectionName": "user",
+            "aclTag": "CUSTOM",
+            "aclRule":{
+              "read": true,
+              "write": true
+            }
+          },
+          {
+            "collectionName": "post",
+            "aclTag": "PRIVATE"
+          },
+          {
+            "collectionName": "chatroom",
+            "aclTag": "CUSTOM",
+            "aclRule":{
+              "read": true,
+              "write": true
+            }
+          }
+        ]
+      }
+    },
+    "auth":{
+      "use": "@cloudbase/framework-plugin-auth",
+      "inputs": {
+        "configs": [
+          {
+            "platform": "ANONYMOUS",
+            "status": "ENABLE"
+          }
+        ]
+      }
+    },
+    "mp":{
+      "use": "@cloudbase/framework-plugin-mp",
+      "inputs": {
+        "appid": "{{env.WX_APPID}}",
+        "privateKey": "{{env.WX_CI_KEY}}",
+        "localPath": "./",
+        "ignores": ["node_modules/**/*"],
+        "deployMode": "preview",
+        "previewOptions": {
+          "desc": "一键预览",
+          "setting": {
+            "es6": false
+          },
+          "qrcodeOutputPath": "./qrcode.jpg",
+          "pagePath": "pages/index/index",
+          "searchQuery": "",
+          "scene": 1011
+        }
+      }
+    }
+  }
+}

@@ -17,18 +17,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // async () => {
       if (app.globalData.openid) {
         this.setData({
           openid: app.globalData.openid
         })
       }
       this.onGetContact()
-    // if(this.data.contacts.length!=0){
-    //   this.setData({
-    //     hasContact:true
-    //   })
-    // }
   },
   /**
    * 读取数据库获得全部联系人openid和uid
@@ -36,6 +30,8 @@ Page({
   onGetContact: function(){
     const db = wx.cloud.database()
     const users = db.collection('user')
+    let that=this
+    this.updateNewMessage(that).then(()=>{
     users.where({
       _openid: this.data.openid,
     })
@@ -51,15 +47,15 @@ Page({
             data: {
               openid:res.data[0].contactlist[index]
             },
-            success: res => {
+            success: newres => {
               let tmpdict = {}
-              tmpdict['openid']=res.result.data[0]._openid
-              tmpdict['name']=res.result.data[0].name
-              tmpdict['avatarUrl']=res.result.data[0].avatarUrl
-              // console.log(res.result.data[0].newmessage)
-              // if(res.result.data[0].newmessage.indexOf(tmpdict['openid'])!==-1)
-              //   tmpdict['ifnew']=true
-              // else  tmpdict['ifnew']=false
+              tmpdict['openid']=newres.result.data[0]._openid
+              tmpdict['name']=newres.result.data[0].name
+              tmpdict['avatarUrl']=newres.result.data[0].avatarUrl
+              console.log(this.data.newmessage)
+              if(this.data.newmessage.length!==0 && this.data.newmessage.indexOf(tmpdict['openid'])!==-1)
+                tmpdict['ifnew']=true
+              else  tmpdict['ifnew']=false
               tmplist[tmplist.length]=tmpdict
               console.log(tmpdict)
               this.setData({
@@ -81,6 +77,28 @@ Page({
         console.error('查询失败：', err)
       }
     })
+  })
+  },
+
+  updateNewMessage:function(that){
+    return new Promise(function (resolve, reject) {
+    const db = wx.cloud.database()
+    const users = db.collection('user')
+    users.where({
+      _openid: that.data.openid
+    })
+    .get({
+      success: res=>{
+        that.setData({
+          newmessage:res.data[0].newmessagelist
+        })
+        resolve(res)
+      },
+      fail: res=>(
+        reject(res)
+      )
+    })
+  })
   },
 
   /**

@@ -3,7 +3,7 @@
   <navigator url="./room/room?contact={{item.openid}}" open-type="navigate" class="layout_horizontal">
     <image src='{{item.avatarUrl}}' style="width:45px;height:45px"></image>
     <text>{{item.name}}</text>
-    <!-- <text wx:if="{{item.ifnew}}">有未读</text> -->
+    <text wx:if="{{item.ifnew}}">有未读</text>
   </navigator>
 </view>
 <view wx:if="{{noContact}}">
