@@ -1,6 +1,6 @@
 var data = {
       //云开发环境id
-      env: 'hyjcloudenv-4g574o4z8bbb7c01',
+      env: 'cloud-group-0grmohzw06a018ef',
       //分享配置
       share_title: 'groupbuying',
       kind: [

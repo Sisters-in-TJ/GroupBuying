@@ -26,7 +26,6 @@ Page({
 
     let a = this.getOpenID().then(res=>{
       var oppoid=options.contact
-      console.log(oppoid)
       var groupid=''
       var openid=res
       if (oppoid<res){
@@ -73,24 +72,6 @@ Page({
         }
       })
     })
-    
-    // 获取用户信息
-    // wx.getSetting({
-    //   success: res => {
-    //     if (res.authSetting['scope.userInfo']) {
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-    //       wx.getUserInfo({
-    //         success: res => {
-    //           this.setData({
-    //             avatarUrl: res.userInfo.avatarUrl,
-    //             userInfo: res.userInfo,
-    //           })
-    //           console.log(res.userInfo)
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
 
     this.setData({
       onGetUserInfo: this.onGetUserInfo,
@@ -99,7 +80,6 @@ Page({
 
     wx.getSystemInfo({
       success: res => {
-        console.log('system info', res)
         if (res.safeArea) {
           const { top, bottom } = res.safeArea
           this.setData({
@@ -123,11 +103,9 @@ Page({
   },
 
   onUnload: function () {
-    console.log("---------")
     this.deleteNewMessageList(this.data.openid,this.data.oppoid)
   },
   deleteNewMessageList: function(openid,oppoid){
-    console.log(openid,oppoid)
     const db = wx.cloud.database()
     const user = db.collection('user')
     const _ = db.command
@@ -139,7 +117,6 @@ Page({
         list=res.data[0].newmessagelist
         for(var i=0;i<list.length;i++){
           if(list[i]==oppoid){
-            console.log(oppoid)
             list.splice(i,1)
             user.where({
               _openid: openid

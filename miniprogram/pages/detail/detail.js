@@ -276,9 +276,25 @@ Page({
         data: doc,
       })
       this.addContact(res,oppoid)
+      this.addNewMessage(res,oppoid)
     })
   },
 
+  addNewMessage:function(openid,oppoid){
+    wx.cloud.callFunction({
+      name: 'addNewMessage',
+      data: {
+        openid:oppoid,
+        oppoid:openid
+      },
+      success: res => {
+        console.log('newmessagelist更新成功')
+      },
+      fail: err => {
+        console.error('[云函数] [addNewMessage] 调用失败：', err)
+      }
+    })
+  },
   addContact:function(id1,id2){
     //调用addContact，更新user
     wx.cloud.callFunction({

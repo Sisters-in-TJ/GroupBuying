@@ -6,7 +6,7 @@ App({
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        env: 'cloud1-3go8mya6a6d9ae16',
+        env: 'cloud-group-0grmohzw06a018ef',
         traceUser: true,
       })
       /**
@@ -17,7 +17,7 @@ App({
         data: {},
         success: res => {
           this.globalData.openid = res.result.openid
-          // this.initWatcher(res.result.openid)
+          this.initWatcher(res.result.openid)
         },
         fail: err => {
           console.error('[云函数] [login] 调用失败', err)
@@ -38,29 +38,27 @@ App({
     })
   },
 
-  // initWatcher: function(openid){//监听新消息
-  //   console.log(openid)
-  //   const db = wx.cloud.database()
-  //   const watcher = db.collection('user').doc(openid)
-  //     .watch({
-  //       onChange: function(snapshot) {
-  //         console.log('user-snapshot', snapshot)
-  //         if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
-  //           wx.showTabBarRedDot({
-  //             index: 2,
-  //           })
-  //         }
-  //         else{
-  //           wx.hideTabBarRedDot({
-  //             index: 2,
-  //           })
-  //         }
-  //       },
-  //       onError: function(err) {
-  //         console.error('the watch closed because of error', err)
-  //       }
-  //     })
-  // },
+  initWatcher: function(openid){
+    //监听新消息
+    const db = wx.cloud.database()
+    const watcher = db.collection('user')
+      .where({
+        _openid:openid
+      })
+      .watch({
+        onChange: function(snapshot) {
+          console.log('user-snapshot', snapshot)
+          if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
+            wx.showTabBarRedDot({
+              index: 2,
+            })
+          }
+        },
+        onError: function(err) {
+          console.error('the watch closed because of error', err)
+        }
+      })
+  },
 
 
   //加入一个方法给tabBar.list配置中的页面使用

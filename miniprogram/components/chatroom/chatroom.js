@@ -72,7 +72,6 @@ Component({
             this.setData({
               [change]: this.data.chats[i]._id
             })
-            console.log(this.data.requestChats)
           }
         }
 
@@ -86,7 +85,8 @@ Component({
           if(list[i]!=this.data.openId)
             oppoId=list[i]
         }
-        // this.deleteNewMessageList(this.data.openId,oppoId)
+        this.deleteNewMessageList(this.data.openId,oppoId)
+        this.onScrollToUpper()
       }, '初始化失败')
     },
 
@@ -160,12 +160,10 @@ Component({
         })
 
         // 监听2：拼单请求变化（同意/拒绝）
-        console.log(this.data.requestChats)
         for(var i=0;i<this.data.requestChats.length;i++){
           const watcher = db.collection('chatroom').doc(this.data.requestChats[i])
           .watch({
             onChange: function(snapshot) {
-              console.log('snapshot', snapshot)
               if(snapshot.type!=="init" && snapshot.docs[0]._openid===openId){
                 if(snapshot.docs[0].requestStatus===1){
                   wx.showModal({
@@ -230,12 +228,9 @@ Component({
         this.setData({
           chats: chats.sort((x, y) => x.sendTimeTS - y.sendTimeTS),
         })
-        if (hasOthersMessage || hasNewMessage) {
-          this.scrollToBottom()
-        }
-        
         // 添加newmessagelist
-        // if (hasOthersMessage){
+        var openid=snapshot.docChanges[0].doc._openid
+        if(openid===this.data.openId){
           var list=this.data.groupId.split('_',2)
           var oppoId
           for(var i=0;i<list.length;i++){
@@ -255,7 +250,11 @@ Component({
               console.error('[云函数] [addNewMessage] 调用失败：', err)
             }
           })
-        // }
+        }
+        this.deleteNewMessageList(this.data.openId,oppoId)
+        if (hasOthersMessage || hasNewMessage) {
+          this.scrollToBottom()
+        }
       }
     },
 
@@ -386,7 +385,6 @@ Component({
         if(list[i]!=this.data.openId)
           oppoId=list[i]
       }
-      console.log(oppoId)
 
       //调用addContact，更新user
       wx.cloud.callFunction({
@@ -417,46 +415,6 @@ Component({
         return
       }
       
-      // 删除newmessage
-      async()=>{
-        var list=this.data.groupId.split('_',2)
-        var oppoId
-        for(var i=0;i<list.length;i++){
-          if(list[i]!=this.data.openId)
-            oppoId=list[i]
-        }
-        console.log(oppoId)
-        const db = this.db
-        const _ = db.command
-        const user = db.collection('user')
-        var flag1=false
-        var list=[]
-        user.where({
-          _openid: this.data.openId
-        }).get({
-          success(res) {
-            list=res.data.newmessagelist
-          }
-        })
-        for(var i=0;i<list.length;i++){
-          if(list[i]==oppoId){
-            list.splice(i,1)
-            user.where({
-              _openid: this.data.openId
-            }).update({
-              data: {
-                newmessagelist: list
-              },
-              success: res => {
-              },
-              fail: err => {
-                console.error('[数据库] [更新记录] 失败：', err)
-              }
-            })
-            break
-          }
-        }
-      }
 
       this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
         this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
@@ -521,7 +479,6 @@ Component({
     },
 
     async onClickReject(event){
-      console.log(event.currentTarget.dataset)
       const db = wx.cloud.database()
       await db.collection('chatroom').doc(event.currentTarget.dataset.request._id).update({
         data: {
@@ -542,7 +499,6 @@ Component({
     },
      //跳转详情
     detail(e) {
-      let that = this;
       var detailID=e.currentTarget.dataset.id;
       wx.navigateTo({
             url: '/pages/detail/detail?scene=' + detailID,
@@ -550,14 +506,11 @@ Component({
     },
     // 加入拼单
     async joinAndUpdate(postid, applyid){
-      console.log(postid)
-      console.log(applyid)
       wx.showModal({
         title:'提示',
         content:'同意此人加入拼单？',
         cancelColor: 'cancelColor',
         success: function(res) {
-          //console.log(res);
           if (res.confirm) {
             const db = wx.cloud.database()
             const _ = db.command

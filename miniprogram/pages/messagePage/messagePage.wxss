@@ -5,3 +5,8 @@
   /*row 横向  column 列表  */
   flex-direction: row;
 }
+.overall{
+  background:white;
+  height:100%;
+  width:100%
+}

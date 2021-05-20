@@ -1,0 +1,5 @@
+<!--components/pullfresh/pullfresh.wxml-->
+<scroll-view scroll-y style="width: {{width}}rpx; height: {{height}}rpx;background:{{background}};" refresher-enabled="{{true}}"  refresher-default-style="black" refresher-triggered="{{triggered}}" bindrefresherpulling="onPulling" bindrefresherrefresh="onRefresh"
+  bindrefresherrestore="onRestore" bindrefresherabort="onAbort" bindscrolltolower='onLoadmore'>
+  <slot name='content'></slot>
+</scroll-view>
