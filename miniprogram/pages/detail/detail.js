@@ -268,7 +268,7 @@ Page({
         sendTime: new Date(),
         sendTimeTS: Date.now(), // fallback
         requestStatus: 0, //default:0, accept:1, reject:2, cancel:3
-        postImage: this.data.imageList[0],
+        postImage: this.data.images_fileID[0],
         postName:this.data.name,
         postThing:this.data.thing
       }
