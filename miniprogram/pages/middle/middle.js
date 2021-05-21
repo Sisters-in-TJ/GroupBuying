@@ -5,7 +5,6 @@ const config = require("../../config.js");
 const _ = db.command;
 Page({
   data: {
-    tabbar: {},
     openid: '',
     List: [],
     searchPost: '',
@@ -25,9 +24,6 @@ Page({
     openidList:[],
     publishidlist:[],
     l_length:0,
-  },
-  onLoad: function (options) {
-    app.editTabbar();
   },
   createPost(e) {
     let that = this

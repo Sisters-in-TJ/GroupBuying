@@ -21,7 +21,6 @@ Page({
     })
   },
   onLoad() {
-    app.editTabbar();//在onload方法中调用app.editTabbar();
     this.listkind();
     this.getList();
   },
