@@ -277,4 +277,14 @@ Page({
       cids: e.detail.value
     })
   },
+  bindlongpressimg(e){
+    let that = this
+    var imageList = that.data.imageList;
+    var deleID = e.currentTarget.dataset.id    //获取点击项目的内容
+    console.log(deleID)
+    imageList.splice(deleID,1)
+    that.setData({
+      imageList:imageList
+    })
+  },
 })
