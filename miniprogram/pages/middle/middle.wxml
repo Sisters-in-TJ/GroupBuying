@@ -4,7 +4,7 @@
 <view class="b_top">
   <block wx:for="{{imageList}}" wx:for-item="image" wx:for-index='idx'>
     <view class="b_poster">
-      <image src="{{image}}" data-id="{{idx}}" data-src="{{image}}" bindtap="previewImage"></image>
+      <image src="{{image}}" data-id="{{idx}}" data-src="{{image}}" bindtap="previewImage" bindlongpress="bindlongpressimg"></image>
     </view>
   </block>
   <view class="b_poster" bindtap="chooseImage">
