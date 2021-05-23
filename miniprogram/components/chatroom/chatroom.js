@@ -79,7 +79,7 @@ Component({
           sendTimeTS: _.gt(initList[initList.length - 1].sendTimeTS),
         } : {})
 
-        var list=this.data.groupId.split('_',2)
+        var list=this.data.groupId.split('/',2)
         var oppoId
         for(var i=0;i<list.length;i++){
           if(list[i]!=this.data.openId)
@@ -103,7 +103,6 @@ Component({
         list=res.data[0].newmessagelist
         for(var i=0;i<list.length;i++){
           if(list[i]==oppoid){
-            console.log(oppoid)
             list.splice(i,1)
             user.where({
               _openid: openid
@@ -231,7 +230,7 @@ Component({
         // 添加newmessagelist
         var openid=snapshot.docChanges[0].doc._openid
         if(openid===this.data.openId){
-          var list=this.data.groupId.split('_',2)
+          var list=this.data.groupId.split('/',2)
           var oppoId
           for(var i=0;i<list.length;i++){
             if(list[i]!=this.data.openId)
@@ -379,7 +378,7 @@ Component({
 
     // 如果是双方第一条消息，更新User表中contactlist字段
     onAddContact(){
-      var list=this.data.groupId.split('_',2)
+      var list=this.data.groupId.split('/',2)
       var oppoId
       for(var i=0;i<list.length;i++){
         if(list[i]!=this.data.openId)

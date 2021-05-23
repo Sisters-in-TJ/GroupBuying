@@ -29,10 +29,10 @@ Page({
       var groupid=''
       var openid=res
       if (oppoid<res){
-        groupid=oppoid+'_'+res
+        groupid=oppoid+'/'+res
       }
       else{
-        groupid=res+'_'+oppoid
+        groupid=res+'/'+oppoid
       }
       this.setData({
         oppoid:oppoid,
@@ -144,13 +144,6 @@ Page({
         avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo
       })
-    }
-  },
-
-  onShareAppMessage() {
-    return {
-      title: '即时通信 Demo',
-      path: '/pages/messagePage/room/room',
     }
   },
 })
