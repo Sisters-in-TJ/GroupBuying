@@ -61,18 +61,10 @@ Page({
           userInfo: res.userInfo,
           hasUserInfo: true
         })
-        wx.cloud.callFunction({
-          name:'get',
-          data:{
-            message:'get',
-          }
-        }).then(res=>{
+       
           console.log(res.result.openid)
-          this.setData({
-            openid:res.result.openid,     
-         })
           db.collection('user').where({
-          _openid:res.result.openid,
+          _openid:app.globalData.openid
         }).get({
           success: res =>{
             this.setData({
@@ -80,7 +72,7 @@ Page({
             })
           }
         })
-        })
+        
         
       }
     })
@@ -93,7 +85,7 @@ Page({
     let that = this;
     console.log(that.data.openid)
     db.collection('user').where({
-      _openid:that.data.openid,
+      _openid:app.globalData.openid,
     }).get({
       success: res =>{
           console.log(res.data[0]),
@@ -116,7 +108,7 @@ Page({
   showaddress() {
     let that = this;
     db.collection('user').where({
-      _openid:that.data.openid,
+      _openid:app.globalData.openid,
     }).get({
       success: res =>{
         this.setData({

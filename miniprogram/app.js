@@ -18,6 +18,7 @@ App({
         success: res => {
           this.globalData.openid = res.result.openid
           this.initWatcher(res.result.openid)
+          console.log(res.result.openid)
         },
         fail: err => {
           console.error('[云函数] [login] 调用失败', err)
@@ -64,6 +65,8 @@ App({
     para:0,//用于收藏按钮传参
     systemInfo: null,//客户端设备信息
     userInfo: null,
+    openid:null,
+    ifexist:false,
     appid: 'wx00ea7f5b6d650d05',
     tabBar: {//在app.js中的globalData中加入自定义tabbar的参数
       "backgroundColor": "#ffffff",

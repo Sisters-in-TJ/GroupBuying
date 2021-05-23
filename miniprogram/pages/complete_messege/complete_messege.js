@@ -30,26 +30,8 @@ Page({
    */
   onLoad: function (options) {
     app.editTabbar();
-  },
-  
-
-  createUser(e) {
-    let that = this
-    if (this.data.loading) {
-      return
-    }
-    this.setData({loading: true})
-    
-    wx.cloud.callFunction({
-      name:'get',
-      data:{
-        message:'get',
-      }
-    }).then(res=>{
-      console.log(res.result.openid)
-    
-      db.collection('user').where({
-      _openid:res.result.openid,
+    db.collection('user').where({
+      _openid:app.globalData.openid,
       })
     .get({
       success: res =>{
@@ -60,7 +42,17 @@ Page({
         })  
       }
     })
-  })
+  },
+  
+
+  createUser(e) {
+    let that = this
+    if (this.data.loading) {
+      return
+    }
+    this.setData({loading: true})
+    
+  
     if(that.data.phonenumber === ""){
       wx.showToast({
         title: '联系方式不能为空!',
@@ -161,7 +153,7 @@ Page({
         collectidlist:[],
         finishidlist:[],
         })
-
+       
         wx.showToast({
           title: '新增记录成功',
         })
