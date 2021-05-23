@@ -62,7 +62,7 @@ Page({
           hasUserInfo: true
         })
        
-          console.log(res.result.openid)
+          
           db.collection('user').where({
           _openid:app.globalData.openid
         }).get({

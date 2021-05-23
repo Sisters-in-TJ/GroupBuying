@@ -29,7 +29,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    app.editTabbar();
+    
     db.collection('user').where({
       _openid:app.globalData.openid,
       })
@@ -154,17 +154,10 @@ Page({
         finishidlist:[],
         })
        
-        wx.showToast({
-          title: '新增记录成功',
-        })
-        console.log('[数据库] [新增记录] 成功，记录 _id: ')
+       
                 
       },
       fail: err => {
-        wx.showToast({
-          icon: 'none',
-          title: '新增记录失败'
-        })
         console.error('[数据库] [新增记录] 失败：', err)
       },
       complete: () => {
