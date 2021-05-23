@@ -253,10 +253,10 @@ Page({
       var oppoid=that.data._openid
       var groupid=''
       if (oppoid<res){
-        groupid=oppoid+'_'+res
+        groupid=oppoid+'/'+res
       }
       else{
-        groupid=res+'_'+oppoid
+        groupid=res+'/'+oppoid
       }
       const doc = {
         _id: `${Math.random()}_${Date.now()}`,
