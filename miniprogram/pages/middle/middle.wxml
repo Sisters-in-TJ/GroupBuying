@@ -20,8 +20,14 @@
     </view>   
   <view class="b_border"></view>
   <view class="b_bar">
-      <input placeholder="拼单描述" value="{{thing}}" bindblur="thingBlur"/>
+    <view class="name">详细信息</view>
+  </view> 
+  <view class="b_notes">
+  <view class="b_text">
+      <textarea placeholder="拼单描述" value="{{thing}}"maxlength="50"  bindinput="thingBlur"></textarea>
+      <view class="b_less">{{note_counts}}/50</view>
   </view>
+ </view>
   <view class="b_border"></view>
   <view class="b_bar">
   <view class="weui-label">分类</view>
