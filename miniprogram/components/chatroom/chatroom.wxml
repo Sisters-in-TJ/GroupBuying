@@ -1,28 +1,20 @@
 <view class="chatroom">
-  <view class="header">
-    <!-- display number of people in the room -->
-    <view class="left"></view>
-    <!-- room name -->
-    <view class="middle">{{groupName}}</view>
-    <!-- reserved -->
-    <view class="right"></view>
-  </view>
-
+  <cover-view class="header">{{groupName}}</cover-view>
   <!-- chats -->
   <scroll-view 
-    class="body" 
-    scroll-y 
-    scroll-with-animation="{{scrollWithAnimation}}"
-    scroll-top="{{scrollTop}}" 
-    scroll-into-view="{{scrollToMessage}}"
-    bindscrolltoupper="onScrollToUpper"
-  >
-    <view 
-      wx:for="{{chats}}"
-      wx:key="{{item._id}}"
-      id="item-{{index}}"
-      class="message {{openId == item._openid ? 'message__self' : ''}}"
+      class="body" 
+      scroll-y="true"
+      scroll-with-animation="{{scrollWithAnimation}}"
+      scroll-top="{{scrollTop}}" 
+      scroll-into-view="{{scrollToMessage}}"
+      bindscrolltoupper="onScrollToUpper"
     >
+      <view 
+        wx:for="{{chats}}"
+        wx:key="{{item._id}}"
+        id="item-{{index}}"
+        class="message {{openId == item._openid ? 'message__self' : ''}}"
+      >
       <image 
         class="avatar"
         src="{{item.avatar}}"
@@ -100,6 +92,7 @@
       >请先登录后参与聊天</button>
     </view>
   </view>
+  
 
 </view>
 
