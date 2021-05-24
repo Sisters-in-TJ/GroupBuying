@@ -293,4 +293,10 @@ Page({
       imageList:imageList
     })
   },
+  resetpic(e){
+    this.setData({
+      imageList:[],
+      images_fileID:[]
+    })
+  }
 })
