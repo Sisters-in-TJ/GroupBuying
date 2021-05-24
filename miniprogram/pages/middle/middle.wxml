@@ -54,6 +54,6 @@
 </view>
 <!-- BUTTON -->
 <button class="b_publish" type="primary" formType="submit">Submit</button>
-<button class="b_publish" formType="reset">Reset</button>
+<button class="b_publish" formType="reset" bindtap="resetpic">Reset</button>
 </form>
 </view>
