@@ -21,6 +21,7 @@ Page({
     kind: JSON.parse(config.data).kind,
     cids: '-1',
     dura: 3,
+    note_counts:0,
     openidList:[],
     publishidlist:[],
     l_length:0,
@@ -227,7 +228,8 @@ Page({
   },
   thingBlur(e) {
     this.setData({
-      thing: e.detail.value
+      thing: e.detail.value,
+      note_counts: e.detail.cursor
     })
   },
   addressBlur(e) {
