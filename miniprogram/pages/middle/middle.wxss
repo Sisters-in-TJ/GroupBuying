@@ -86,7 +86,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fbbd08;
+  background: #C5E1A5;
   color: #fff;
   border-radius: 40rpx;
   letter-spacing: 4rpx;

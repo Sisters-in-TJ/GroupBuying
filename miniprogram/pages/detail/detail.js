@@ -4,7 +4,6 @@ const cont = db.collection('post');
 const app=getApp();
 
 const _ = db.command;
-const config = require("../../config.js");
 
 Page({
 
@@ -41,20 +40,19 @@ Page({
     autoplay:false,
     interval:1000,
     duration:2000,
-    l_length:0
+    l_length:0,
+    swiper_height:'350',
     },
-
     
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {     
-      console.log('测试 ==> ',app.globalData.openid); 
+    onLoad: function (options) {  
       db.collection('post').where({
         _id:options.scene,
       }).get({
         success: res =>{
-          console.log('test==>',res.data[0]);
+          console.log('test==>',res.data[0].images_fileID);
           this.setData({
           id:options.scene,
           _openid:res.data[0]._openid,  
@@ -67,13 +65,11 @@ Page({
           images_fileID:res.data[0].images_fileID,
           imageList:res.data[0].imageList,
           openidList:res.data[0].openidList,
-          need:res.data[0].need,          
+          need:res.data[0].need,       
           })
         }
       })
-
-      
-    let a = this.getOpenID().then(res=>{
+      let a = this.getOpenID().then(res=>{
       wx.cloud.callFunction({
         name: 'getInfo',
         data: {
@@ -92,8 +88,9 @@ Page({
     })
       
     },    
-        
     
+
+
     join:function(){
       var that=this
       db.collection('post').where({
@@ -136,9 +133,16 @@ Page({
               if (res.confirm) {
 
                 console.log('用户点击确定');
-                
+                that.data.status++;
                 var contact=that.data._openid;
                 console.log(contact);
+                db.collection('post').doc(that.data.id).update({
+                  data: {
+                    status:that.data.status,
+                    openidList:_.push([app.globalData.openid]),
+                    need:that.data.number-that.data.status,
+                  }
+                })
                 that.sendRequest()
                 wx.navigateTo({
                   url: '../messagePage/room/room?contact='+contact,
@@ -150,7 +154,7 @@ Page({
                 mask: true,
                 
                 })
-                //console.log('after=>',that.data.openidList)              
+                console.log('after=>',that.data.status);              
               } else if (res.cancel) {
 
                 console.log('用户点击取消',that.data.status);
@@ -268,7 +272,7 @@ Page({
         sendTime: new Date(),
         sendTimeTS: Date.now(), // fallback
         requestStatus: 0, //default:0, accept:1, reject:2, cancel:3
-        postImage: this.data.imageList[0],
+        postImage: this.data.images_fileID[0],
         postName:this.data.name,
         postThing:this.data.thing
       }

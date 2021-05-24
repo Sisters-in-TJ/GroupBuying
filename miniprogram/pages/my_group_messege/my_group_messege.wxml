@@ -65,7 +65,6 @@
 <view class="kindlist_box" wx:if="{{showpublish}}"> 
    <view class="list" wx:if="{{listpublish.length>0}}">
         <block wx:for="{{listpublish}}" wx:key="_id">
-          <view class="line"></view>
             <view class="list_one" bindtap="detail" data-id="{{item._id}}">
               <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
               <view class="list_content">
@@ -75,8 +74,14 @@
                   </view>
                   <view class="list_between">
                     <view class="list_price">￥{{item.price}}.00元</view>
-                   </view>
+                  </view>              
               </view>
+            </view>
+
+            <view class="change">
+                <button class="modify_bt" 
+                bindtap="modify"
+                data-id="{{item._id}}">修 改</button>
             </view>
         </block>
       </view>

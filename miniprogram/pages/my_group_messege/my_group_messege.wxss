@@ -64,6 +64,7 @@
 .list_poster {
   width: 60px;
   height: 60px;
+  border-radius: 10px;
 }
 
 .list_content {
@@ -116,3 +117,13 @@
   color: rgb(255, 0, 0);
 }
 
+.modify_bt{
+ 
+  margin-right:40px !important;
+  padding:0;
+  background-color: #C5E1A5;
+  font-size:29rpx;
+  color:black;
+  border-radius: 20px;
+  width:20% !important;
+}

@@ -20,6 +20,7 @@ Page({
     publishidlist:[],
     addidlist:[],
     collectidlist:[],
+    _id:'',
     
   },
 
@@ -154,10 +155,19 @@ Page({
   //跳转详情
 detail(e) {
   let that = this;
+  console.log(e);
   var detailID=e.currentTarget.dataset.id;
   wx.navigateTo({
         url: '/pages/detail/detail?scene=' + detailID,
   })
+},
+
+modify(e){
+  //console.log("吊炸天=>",e);
+  wx.navigateTo({
+    url: '/pages/modify/modify?scene=' + e.currentTarget.dataset.id,
+  })
+
 },
   /**
    * 生命周期函数--监听页面加载

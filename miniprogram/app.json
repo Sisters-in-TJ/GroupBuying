@@ -9,7 +9,8 @@
     "pages/complete_messege/complete_messege",
     "pages/my_group_messege/my_group_messege",
     "pages/messagePage/messagePage",
-    "pages/messagePage/room/room"
+    "pages/messagePage/room/room",
+    "pages/modify/modify"
   ],
   "tabBar": {
     "backgroundColor": "#ffffff",
@@ -45,7 +46,7 @@
   "window": {
     "backgroundColor": "#FFE700",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FFE700",
+    "navigationBarBackgroundColor": "#C5E1A5",
     "navigationBarTitleText": "GroupBuying",
     "navigationBarTextStyle": "black"
   },
