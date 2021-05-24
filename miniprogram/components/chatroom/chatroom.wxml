@@ -3,7 +3,7 @@
   <!-- chats -->
   <scroll-view 
       class="body" 
-      scroll-y 
+      scroll-y="true"
       scroll-with-animation="{{scrollWithAnimation}}"
       scroll-top="{{scrollTop}}" 
       scroll-into-view="{{scrollToMessage}}"

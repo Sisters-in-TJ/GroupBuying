@@ -6,18 +6,17 @@
 }
 
 .chatroom .header {
+  box-sizing:border-box;
   position: fixed;
   flex-basis: fit-content;
   display: flex;
   width:100%;
+  height:50px;
   background:white;
   border-bottom: 1px solid #ddd;
   padding: 20rpx 0 30rpx;
   font-size: 36rpx;
   text-align: center;
-  /* background: rgb(34, 187, 47);
-  color: rgba(255, 255, 255, 1) */
-  /* font-family: 'Microsoft YaHei' */
 }
 
 .chatroom .header .left {
@@ -34,9 +33,10 @@
 }
 
 .chatroom .body {
-  flex: 2;
   display: flex;
   flex-direction: column;
+  margin-top:50px;
+  margin-bottom: 50px;
   background: rgb(237,237,237);
   padding-bottom: 16rpx;
 }
@@ -128,6 +128,7 @@
 .chatroom .footer {
   box-sizing:border-box;
   width:100%;
+  height:50px;
   bottom:0px;
   position: fixed;
   flex-basis: fit-content;
