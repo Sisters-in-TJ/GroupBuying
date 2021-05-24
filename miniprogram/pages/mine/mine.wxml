@@ -93,12 +93,13 @@
 
 <view class='item'>
   <view class="kind">
-  <navigator url="../personinfo/personinfo" open-type="navigate" class="navigator">
-    <view class="title">意见反馈</view>
+  
+    <button class='button_feedback' open-type='feedback' >
+      意见反馈</button>
       <view class="detail2">
         <text></text>
       </view>
-  </navigator>
+ 
   </view>
 </view>
 
@@ -108,9 +109,7 @@
   <view class="kind" >
   <navigator url="../personinfo/personinfo" open-type="navigate" class="navigator">
     <view class="title">设置</view>
-      <view class="detail2">
-        <text></text>
-      </view>
+      
   </navigator>
   </view>
 </view>

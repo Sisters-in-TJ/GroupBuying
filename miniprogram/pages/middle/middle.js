@@ -78,36 +78,23 @@ Page({
           console.log("obj", res)   
           if (res.confirm) {
             console.log('用户点击确定')
-            wx.cloud.callFunction({
-              name:'get',
-              data:{
-                message:'get',
-              }
-            }).then(res=>{
-              that.setData({
-                openid:res.result.openid,   
-             })
-            }).then(()=>{
             db.collection('user').where({
-              _openid:that.data.openid,
+              _openid:app.globalData.openid
             })
             .get({
               success: res =>{
                 console.log(res)
                 console.log(res.data.length)
-                 if(res.data.length == 0){
-                 wx.showToast({
-                icon: 'none',
-                title: '该用户尚未注册，请注册后再发布'
-              })
-            } else {
-              that.issuePost(e);
-            }
-          
+                if(res.data.length == 0){
+                  wx.showToast({
+                  icon: 'none',
+                  title: '该用户尚未注册，请注册后再发布'
+                  })
+                } else {
+                 that.issuePost(e);
+                }          
               }
-            })
-          })
-            
+            }) 
           } else {
             console.log('用户点击取消')
           }
@@ -176,20 +163,11 @@ Page({
           openidList:[],
           cids: '-1',
         })
-        wx.cloud.callFunction({
-          name:'get',
-          data:{
-            message:'get',
-          }
-        }).then(res=>{
-          this.setData({
-            openid:res.result.openid,   
-         })
-        }).then(()=>{
-          console.log(res._id)
-          console.log(that.data.openid,)
-          db.collection('user').where({
-          _openid:that.data.openid,
+        
+        console.log(res._id)
+        console.log(that.data.openid,)
+        db.collection('user').where({
+          _openid:app.globalData.openid,
         }).update({
           data: {
             publishidlist:_.push([res._id]),
@@ -199,7 +177,7 @@ Page({
           }
         },
         )
-      })
+      
         wx.showToast({
           title: '新增记录成功',
         })
@@ -293,4 +271,10 @@ Page({
       imageList:imageList
     })
   },
+  resetpic(e){
+    this.setData({
+      imageList:[],
+      images_fileID:[]
+    })
+  }
 })

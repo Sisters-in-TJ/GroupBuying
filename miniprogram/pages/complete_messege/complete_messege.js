@@ -29,27 +29,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    app.editTabbar();
-  },
-  
-
-  createUser(e) {
-    let that = this
-    if (this.data.loading) {
-      return
-    }
-    this.setData({loading: true})
     
-    wx.cloud.callFunction({
-      name:'get',
-      data:{
-        message:'get',
-      }
-    }).then(res=>{
-      console.log(res.result.openid)
-    
-      db.collection('user').where({
-      _openid:res.result.openid,
+    db.collection('user').where({
+      _openid:app.globalData.openid,
       })
     .get({
       success: res =>{
@@ -60,7 +42,17 @@ Page({
         })  
       }
     })
-  })
+  },
+  
+
+  createUser(e) {
+    let that = this
+    if (this.data.loading) {
+      return
+    }
+    this.setData({loading: true})
+    
+  
     if(that.data.phonenumber === ""){
       wx.showToast({
         title: '联系方式不能为空!',
@@ -161,18 +153,11 @@ Page({
         collectidlist:[],
         finishidlist:[],
         })
-
-        wx.showToast({
-          title: '新增记录成功',
-        })
-        console.log('[数据库] [新增记录] 成功，记录 _id: ')
+       
+       
                 
       },
       fail: err => {
-        wx.showToast({
-          icon: 'none',
-          title: '新增记录失败'
-        })
         console.error('[数据库] [新增记录] 失败：', err)
       },
       complete: () => {
