@@ -86,7 +86,6 @@ Component({
             oppoId=list[i]
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
-        this.onScrollToUpper()
       }, '初始化失败')
     },
 

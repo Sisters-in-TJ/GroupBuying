@@ -83,8 +83,11 @@ Page({
         if (res.safeArea) {
           const { top, bottom } = res.safeArea
           this.setData({
-            containerStyle: `padding-top: ${(/ios/i.test(res.system) ? 10 : 20) + top}px; padding-bottom: ${20 + res.windowHeight - bottom}px`,
+            // containerStyle: `padding-top: ${(/ios/i.test(res.system) ? 10 : 20) + top}px; padding-bottom: ${20 + res.windowHeight - bottom}px`,
+            containerStyle: `padding-top: 0px; padding-bottom: 4px`,
           })
+          console.log(res)
+          console.log(this.data.containerStyle)
         }
       },
     })
