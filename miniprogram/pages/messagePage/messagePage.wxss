@@ -1,8 +1,9 @@
 /* miniprogram/pages/messagePage/messagePage.wxss */
+@import "../../colorui/main.wxss";
+@import "../../colorui/icon.wxss";
 .layout_horizontal{
-  height: 100rpx;
+  height: fit-content;
   display: flex;
-  /*row 横向  column 列表  */
   flex-direction: row;
 }
 .overall{

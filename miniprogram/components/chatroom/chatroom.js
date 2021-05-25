@@ -1,8 +1,8 @@
-const FATAL_REBUILD_TOLERANCE = 10
-const SETDATA_SCROLL_TO_BOTTOM = {
-  scrollTop: 100000,
-  scrollWithAnimation: true,
-}
+// const FATAL_REBUILD_TOLERANCE = 10
+// const SETDATA_SCROLL_TO_BOTTOM = {
+//   scrollTop: 100000,
+//   scrollWithAnimation: true,
+// }
 
 Component({
   properties: {
@@ -60,9 +60,12 @@ Component({
         const { data: initList } = await db.collection(collection).where(this.mergeCommonCriteria()).orderBy('sendTimeTS', 'desc').get()
 
         console.log('init query chats', initList)
+        for(var i=0;i<initList.length;i++){
+          initList[i]['time']=initList[i].sendTime.toLocaleString().replace(/:\d{1,2}$/,' ')
+        }
         this.setData({
           chats: initList.reverse(),
-          scrollTop: 10000,
+          // scrollTop: 10000,
         })
 
         for(var i=0;i<this.data.chats.length;i++){
@@ -197,7 +200,7 @@ Component({
             ...[...snapshot.docs].sort((x, y) => x.sendTimeTS - y.sendTimeTS),
           ],
         })
-        this.scrollToBottom()
+        // this.scrollToBottom()
         this.inited = true
       } else {
         let hasNewMessage = false
@@ -235,27 +238,47 @@ Component({
             if(list[i]!=this.data.openId)
               oppoId=list[i]
           }
-          wx.cloud.callFunction({
-            name: 'addNewMessage',
-            data: {
-              openid:oppoId,
-              oppoid:this.data.openId
-            },
-            success: res => {
-              console.log('newmessagelist更新成功')
-            },
-            fail: err => {
-              console.error('[云函数] [addNewMessage] 调用失败：', err)
-            }
-          })
+          this.addNewMessage(oppoId,this.data.openId)
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
-        if (hasOthersMessage || hasNewMessage) {
-          this.scrollToBottom()
-        }
+        // if (hasOthersMessage || hasNewMessage) {
+        //   this.scrollToBottom()
+        // }
       }
     },
 
+    addNewMessage:function(openid,oppoid){
+      const db = wx.cloud.database()
+      const user = db.collection('user')
+      const _ = db.command
+      var flag=false
+      var list=[]
+      user.where({
+        _openid: openid
+      }).get({
+        success(res) {
+          list=res.data[0].newmessagelist
+          for(var i=0;i<list.length;i++){
+            if(list[i]==oppoid)
+              flag=true
+          }
+          if(!flag){
+            user.where({
+              _openid: openid
+            }).update({
+              data: {
+                newmessagelist: _.push(oppoid)
+              },
+              success: res => {
+              },
+              fail: err => {
+                console.error('[数据库] [更新记录] 失败：', err)
+              }
+            })
+          }
+        }
+      })
+    },
     async onConfirmSendText(e) {
       this.try(async () => {
         if (!e.detail.value) {
@@ -288,7 +311,7 @@ Component({
             },
           ],
         })
-        this.scrollToBottom(true)
+        // this.scrollToBottom(true)
 
         await db.collection(collection).add({
           data: doc,
@@ -335,7 +358,7 @@ Component({
               },
             ]
           })
-          this.scrollToBottom(true)
+          // this.scrollToBottom(true)
 
           const uploadTask = wx.cloud.uploadFile({
             cloudPath: `${this.data.openId}/${Math.random()}_${Date.now()}.${res.tempFilePaths[0].match(/\.(\w+)$/)[1]}`,
@@ -383,21 +406,72 @@ Component({
         if(list[i]!=this.data.openId)
           oppoId=list[i]
       }
+      var id1=this.data.openId
+      var id2=oppoId
+      const db = wx.cloud.database()
+      const user = db.collection('user')
+      const _ = db.command
+      var flag1=false
+      var flag2=false
+      var list=[]
+      user.where({
+        _openid: id1
+      }).get({
+        success:function(res) {
+          list=res.data[0].contactlist
+          for(var i=0;i<list.length;i++){
+                if(list[i]==id2)
+                flag1=true
+            }
+            if(!flag1){
 
-      //调用addContact，更新user
-      wx.cloud.callFunction({
-        name: 'addContact',
-        data: {
-          id1:this.data.openId,
-          id2:oppoId
-        },
-        success: res => {
-          console.log('联系人加入成功')
-        },
-        fail: err => {
-          console.error('[云函数] [addContact] 调用失败：', err)
+                user.where({
+                _openid: id1
+                }).update({
+                data: {
+                    contactlist: _.push(id2)
+                }
+                })
+            }
         }
       })
+      var list2=[]
+      user.where({
+        _openid: id2
+      }).get({
+        success:function(res) {
+            list2=res.data[0].contactlist
+      
+            for(var i=0;i<list2.length;i++){
+                if(list2[i]===id1)
+                flag2=true
+            }
+            if(!flag2){
+
+                user.where({
+                _openid: id2
+                }).update({
+                data: {
+                    contactlist: _.push(id1),
+                }
+                })
+            }
+        }
+      })
+      //调用addContact，更新user
+      // wx.cloud.callFunction({
+      //   name: 'addContact',
+      //   data: {
+      //     id1:this.data.openId,
+      //     id2:oppoId
+      //   },
+      //   success: res => {
+      //     console.log('联系人加入成功')
+      //   },
+      //   fail: err => {
+      //     console.error('[云函数] [addContact] 调用失败：', err)
+      //   }
+      // })
     },
 
     onMessageImageTap(e) {
@@ -406,38 +480,38 @@ Component({
       })
     },
 
-    scrollToBottom(force) {
-      if (force) {
-        console.log('force scroll to bottom')
-        this.setData(SETDATA_SCROLL_TO_BOTTOM)
-        return
-      }
+    // scrollToBottom(force) {
+    //   if (force) {
+    //     console.log('force scroll to bottom')
+    //     this.setData(SETDATA_SCROLL_TO_BOTTOM)
+    //     return
+    //   }
 
-      this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
-        this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
-          if (scroll.scrollTop + bodyRect.height * 3 > scroll.scrollHeight) {
-            console.log('should scroll to bottom')
-            this.setData(SETDATA_SCROLL_TO_BOTTOM)
-          }
-        }).exec()
-      }).exec()
-    },
+    //   this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
+    //     this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
+    //       if (scroll.scrollTop + bodyRect.height * 3 > scroll.scrollHeight) {
+    //         console.log('should scroll to bottom')
+    //         this.setData(SETDATA_SCROLL_TO_BOTTOM)
+    //       }
+    //     }).exec()
+    //   }).exec()
+    // },
 
-    async onScrollToUpper() {
-      if (this.db && this.data.chats.length) {
-        const { collection } = this.properties
-        const _ = this.db.command
-        const { data } = await this.db.collection(collection).where(this.mergeCommonCriteria({
-          sendTimeTS: _.lt(this.data.chats[0].sendTimeTS),
-        })).orderBy('sendTimeTS', 'desc').get()
-        this.data.chats.unshift(...data.reverse())
-        this.setData({
-          chats: this.data.chats,
-          scrollToMessage: `item-${data.length}`,
-          scrollWithAnimation: false,
-        })
-      }
-    },
+    // async onScrollToUpper() {
+    //   if (this.db && this.data.chats.length) {
+    //     const { collection } = this.properties
+    //     const _ = this.db.command
+    //     const { data } = await this.db.collection(collection).where(this.mergeCommonCriteria({
+    //       sendTimeTS: _.lt(this.data.chats[0].sendTimeTS),
+    //     })).orderBy('sendTimeTS', 'desc').get()
+    //     this.data.chats.unshift(...data.reverse())
+    //     this.setData({
+    //       chats: this.data.chats,
+    //       scrollToMessage: `item-${data.length}`,
+    //       scrollWithAnimation: false,
+    //     })
+    //   }
+    // },
 
     async try(fn, title) {
       try {

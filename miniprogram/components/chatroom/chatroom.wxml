@@ -1,71 +1,112 @@
-<view class="chatroom">
+<!-- <view class="chatroom"> -->
   <cover-view class="header">{{groupName}}</cover-view>
-  <!-- chats -->
-  <scroll-view 
-      class="body" 
-      scroll-y="true"
-      scroll-with-animation="{{scrollWithAnimation}}"
-      scroll-top="{{scrollTop}}" 
-      scroll-into-view="{{scrollToMessage}}"
-      bindscrolltoupper="onScrollToUpper"
-    >
-      <view 
-        wx:for="{{chats}}"
-        wx:key="{{item._id}}"
-        id="item-{{index}}"
-        class="message {{openId == item._openid ? 'message__self' : ''}}"
-      >
-      <image 
-        class="avatar"
-        src="{{item.avatar}}"
-        mode="scaleToFill"
-      ></image> 
-      <view class="main">
-        <view class="nickname">{{item.nickName}}</view>
-        <block wx:if="{{item.msgType === 'image'}}">
-          <view class="image-wrapper">
-            <view class="loading" wx:if="{{item.writeStatus > -1}}">{{item.writeStatus}}%</view>
-            <image 
-              src="{{item.tempFilePath || item.imgFileID}}" 
-              data-fileid="{{item.tempFilePath || item.imgFileID}}" 
-              class="image-content" 
-              style="{{item.imgStyle}}"
-              mode="scallToFill" 
-              bindtap="onMessageImageTap"></image>
-          </view>
-        </block>
+<view class="cu-chat" style="margin-top:50px; margin-bottom:50px">
+  <view 
+    wx:for="{{chats}}"
+    wx:key="{{item._id}}"
+    id="item-{{index}}"
+    class="cu-item {{openId == item._openid ? 'self' : ''}}"
+  >
+    <block wx:if="{{openId==item._openid}}">
+      <block wx:if="{{item.msgType === 'image'}}">
+        <view class="main">
+          <view class="loading" wx:if="{{item.writeStatus > -1}}">{{item.writeStatus}}%</view>
+          <image 
+            src="{{item.tempFilePath || item.imgFileID}}"
+            data-fileid="{{item.tempFilePath || item.imgFileID}}"
+            style="{{item.imgStyle}}"
+            class="radius" 
+            mode="widthFix"
+            bindtap="onMessageImageTap"></image>
+        </view>
+        <view class="cu-avatar radius" style="background-image:url({{item.avatar}});"></view>
+        <view class="date">{{item.time}}</view>
+      </block>
 
-        <!-- 根据消息类型不同 有不同的显示 -->
-        <block wx:else>
-          <view class="text-wrapper" wx:if="{{item.msgType === 'text'}}">
-            <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
-            <view class="text-content">{{item.textContent}}</view>
+      <block wx:else>
+        <view class="main" wx:if="{{item.msgType === 'text'}}">
+          <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
+          <view class="content bg-green shadow">
+            <text>{{item.textContent}}</text>
           </view>
-          <view class="text-wrapper" wx:if="{{item.msgType === 'request'}}">
-            <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
-            <view class="text-content">请求加入您的拼单：
-              <view class="send-post" bindtap="detail" data-id="{{item.textContent}}">
-                <image src='{{item.postImage}}' style="width:100px;height:100px"></image>
-                <view>
-                  <text>{{item.postName}}\n</text>
-                  <text>{{item.postThing}}</text>
-                </view>
+        </view>
+
+        <view class="main" wx:if="{{item.msgType === 'request'}}">
+          <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
+          <view class="content bg-green shadow flex" style="flex-direction: column;">
+            <view class="text-lg text-bold">请求加入您的拼单：</view>
+            <view class="send-post" bindtap="detail" data-id="{{item.textContent}}">
+              <image src='{{item.postImage}}' style="width:80px;height:80px"></image>
+              <view class="post-text">
+                <view class="text-cut text-black" style="width:80px">{{item.postName}}\n</view>
+                <view class="text-cut text-black" style="width:80px">{{item.postThing}}\n</view>
               </view>
-              <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickAccept">同意</button>
-              <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickReject">拒绝</button>
-              <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel">取消</button>
-              <view wx:if="{{item.requestStatus === 1}}">已同意</view>
-              <view wx:if="{{item.requestStatus === 2}}">已拒绝</view>
-              <view wx:if="{{item.requestStatus === 3}}">已取消</view>
             </view>
+            <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickAccept" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">同意</button>
+            <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickReject" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">拒绝</button>
+            <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
+            <view wx:if="{{item.requestStatus === 1}}">已同意</view>
+            <view wx:if="{{item.requestStatus === 2}}">已拒绝</view>
+            <view wx:if="{{item.requestStatus === 3}}">已取消</view>
           </view>
-        </block>
-      </view>
-    </view>
-  </scroll-view>
+        </view>
+        <view class="cu-avatar radius" style="background-image:url({{item.avatar}});"></view>
+        <view class="date">{{item.time}}</view>
+      </block>
+    </block>
+      
+    <block wx:else>
+      <block wx:if="{{item.msgType === 'image'}}">
+        <view class="cu-avatar radius" style="background-image:url({{item.avatar}});"></view>
+        <view class="main">
+          <view class="loading" wx:if="{{item.writeStatus > -1}}">{{item.writeStatus}}%</view>
+          <image 
+            src="{{item.tempFilePath || item.imgFileID}}"
+            data-fileid="{{item.tempFilePath || item.imgFileID}}"
+            style="{{item.imgStyle}}"
+            class="radius" 
+            mode="widthFix"
+            bindtap="onMessageImageTap"></image>
+        </view>
+        <view class="date">{{item.time}}</view>
+      </block>
+      <block wx:else>
+        <view class="cu-avatar radius" style="background-image:url({{item.avatar}});"></view>
+        <view class="main" wx:if="{{item.msgType === 'text'}}">
+          <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
+          <view class="content shadow">
+            <text>{{item.textContent}}</text>
+          </view>
+        </view>
+        
+        <view class="main" wx:if="{{item.msgType === 'request'}}">
+          <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
+          <view class="content shadow flex" style="flex-direction: column;">
+            <view class="text-lg text-bold">请求加入您的拼单：</view>
+            <view class="send-post" bindtap="detail" data-id="{{item.textContent}}">
+              <image src='{{item.postImage}}' style="width:80px;height:80px"></image>
+              <view class="post-text">
+                <view class="text-cut" style="width:80px">{{item.postName}}\n</view>
+                <view class="text-cut" style="width:80px">{{item.postThing}}\n</view>
+              </view>
+            </view>
+            <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickAccept" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">同意</button>
+            <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickReject" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">拒绝</button>
+            <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
+            <view wx:if="{{item.requestStatus === 1}}">已同意</view>
+            <view wx:if="{{item.requestStatus === 2}}">已拒绝</view>
+            <view wx:if="{{item.requestStatus === 3}}">已取消</view>
+          </view>
+        </view>
+        <view class="date">{{item.time}}</view>
+      </block>
+    </block>
+    
 
-  <!-- message sender -->
-  <view class="footer">
+  </view>
+</view>
+<!-- message sender -->
+<view class="footer">
     <view class="message-sender" wx:if="{{userInfo}}">
       <input 
         class="text-input"
@@ -92,7 +133,4 @@
       >请先登录后参与聊天</button>
     </view>
   </view>
-  
-
-</view>
-
+  <!-- </view> -->
