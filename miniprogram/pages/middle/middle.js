@@ -21,6 +21,7 @@ Page({
     kind: JSON.parse(config.data).kind,
     cids: '-1',
     dura: 3,
+    note_counts:0,
     openidList:[],
     publishidlist:[],
     l_length:0,
@@ -78,36 +79,23 @@ Page({
           console.log("obj", res)   
           if (res.confirm) {
             console.log('用户点击确定')
-            wx.cloud.callFunction({
-              name:'get',
-              data:{
-                message:'get',
-              }
-            }).then(res=>{
-              that.setData({
-                openid:res.result.openid,   
-             })
-            }).then(()=>{
             db.collection('user').where({
-              _openid:that.data.openid,
+              _openid:app.globalData.openid
             })
             .get({
               success: res =>{
                 console.log(res)
                 console.log(res.data.length)
-                 if(res.data.length == 0){
-                 wx.showToast({
-                icon: 'none',
-                title: '该用户尚未注册，请注册后再发布'
-              })
-            } else {
-              that.issuePost(e);
-            }
-          
+                if(res.data.length == 0){
+                  wx.showToast({
+                  icon: 'none',
+                  title: '该用户尚未注册，请注册后再发布'
+                  })
+                } else {
+                 that.issuePost(e);
+                }          
               }
-            })
-          })
-            
+            }) 
           } else {
             console.log('用户点击取消')
           }
@@ -124,7 +112,21 @@ Page({
 
     issuePost(e){
       var that = this
-      var imgeList = that.data.imageList.concat(e.tempFilePaths);
+      var imageList = this.data.imageList;
+      var the_images_fileID = that.data.images_fileID;
+      for(let i=0; i<imageList.length;i++){
+        wx.cloud.uploadFile({
+          cloudPath: 'manage/record/' + imageList[i].split("/"), // 上传至云端的路径
+          filePath: imageList[i], // 小程序临时文件路径
+          success: res => {
+            // 返回文件 ID 
+            console.log("上传成功" + res.fileID);
+            the_images_fileID.push(res.fileID);
+            this.setData({
+                images_fileID: the_images_fileID//更新data中的fileID
+               })
+            console.log("fileId",this.data.images_fileID);
+            if(i+1==imageList.length){
       db.collection('post').add({
       data: {
         name: this.data.name,
@@ -162,20 +164,11 @@ Page({
           openidList:[],
           cids: '-1',
         })
-        wx.cloud.callFunction({
-          name:'get',
-          data:{
-            message:'get',
-          }
-        }).then(res=>{
-          this.setData({
-            openid:res.result.openid,   
-         })
-        }).then(()=>{
-          console.log(res._id)
-          console.log(that.data.openid,)
-          db.collection('user').where({
-          _openid:that.data.openid,
+        
+        console.log(res._id)
+        console.log(that.data.openid,)
+        db.collection('user').where({
+          _openid:app.globalData.openid,
         }).update({
           data: {
             publishidlist:_.push([res._id]),
@@ -185,7 +178,7 @@ Page({
           }
         },
         )
-      })
+      
         wx.showToast({
           title: '新增记录成功',
         })
@@ -203,8 +196,9 @@ Page({
         this.setData({loading: false})
       }
     })
-    
-  },
+  }},
+  fail: console.error})
+}},
   nameBlur(e) {
     this.setData({
       name: e.detail.value
@@ -212,7 +206,8 @@ Page({
   },
   thingBlur(e) {
     this.setData({
-      thing: e.detail.value
+      thing: e.detail.value,
+      note_counts: e.detail.cursor
     })
   },
   addressBlur(e) {
@@ -235,26 +230,17 @@ Page({
 },
   chooseImage: function (event) {
     var that = this;
+    var imageList = this.data.imageList;
     wx.chooseImage({
       count: 3, // 一次最多可以选择2张图片一起上传
       sizeType: ['original', 'compressed'],//可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], //可以指定来源是相册还是相机，默认二者都有
       success: function (res) {
         console.log(res)
-        var imageList = that.data.imageList.concat(res.tempFilePaths);
-        var imageUrl = imageList[0].split("/");
-        var imagename = imageUrl[imageUrl.length - 1];//得到图片的名称
-        var images_fileID = that.data.images_fileID;
-        wx.cloud.uploadFile({
-          cloudPath: "community/article_images/" + imagename,  
-          filePath: imageList[0],
-          success:res =>{
-            images_fileID.push(res.fileID);
-            that.setData({
-              images_fileID: images_fileID//更新data中的fileID
-            })
-          }
-        })
+        var imgs = res.tempFilePaths;   
+        for (var i = 0; i < imgs.length; i++) {
+          imageList.push(imgs[i])
+        }
         that.setData({
           imageList: imageList
         });
@@ -287,4 +273,10 @@ Page({
       imageList:imageList
     })
   },
+  resetpic(e){
+    this.setData({
+      imageList:[],
+      images_fileID:[]
+    })
+  }
 })

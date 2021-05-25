@@ -86,8 +86,27 @@ Page({
         }
       })
     })
-      
+      this.ifexists()
+    
     },    
+<<<<<<< HEAD
+=======
+
+    ifexists:function(){
+      console.log(app.globalData.openid)
+      db.collection('user').where({
+          _openid:app.globalData.openid,
+        })
+        .get({
+          success: res =>{
+            this.setData({
+               l_length:res.data.length       
+            })  
+          }
+        })
+      
+    },  
+>>>>>>> aa277e805e3cc1f4a02c5ea62486b91607a41a72
     
 
 
@@ -99,6 +118,13 @@ Page({
         openidList:app.globalData.openid,
       }).get({
         success:function(res){
+          if(that.data.l_length==0){
+            wx.showToast({
+              icon: 'none',
+              title: '该用户尚未注册，请注册后操作'
+            })
+          }else{
+         
           if(res.data.length>0){//用户已加入拼单
             wx.showToast({
               title: '您已加入该拼单！',
@@ -166,36 +192,12 @@ Page({
         }     
       }
           }
-          }
+          }}
         })
     },
 
     collect:function(){
       var that=this
-      wx.cloud.callFunction({
-        name:'get',
-        data:{
-          message:'get',
-        }
-      }).then(res=>{
-        console.log(res.result.openid)
-        this.setData({
-          openid:res.result.openid        
-       })
-      }).then(()=>{
-      db.collection('user').where({
-        _openid:that.data.openid,
-      })
-      .get({
-        success: res =>{
-          console.log(res)
-          console.log(res.data.length)
-          this.setData({
-             l_length:res.data.length       
-          })  
-        }
-      })
-    }).then(()=>{
       db.collection('post').where({
         _id:that.data.id,
         _openid:that.data._openid,                
@@ -246,7 +248,7 @@ Page({
           }
         }, 
       })
-    })
+    
     },
 
     // 将请求加入的信息存入数据库
@@ -257,10 +259,10 @@ Page({
       var oppoid=that.data._openid
       var groupid=''
       if (oppoid<res){
-        groupid=oppoid+'_'+res
+        groupid=oppoid+'/'+res
       }
       else{
-        groupid=res+'_'+oppoid
+        groupid=res+'/'+oppoid
       }
       const doc = {
         _id: `${Math.random()}_${Date.now()}`,

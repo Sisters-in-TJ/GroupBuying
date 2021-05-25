@@ -60,7 +60,6 @@ Component({
         const { data: initList } = await db.collection(collection).where(this.mergeCommonCriteria()).orderBy('sendTimeTS', 'desc').get()
 
         console.log('init query chats', initList)
-
         this.setData({
           chats: initList.reverse(),
           scrollTop: 10000,
@@ -79,50 +78,49 @@ Component({
           sendTimeTS: _.gt(initList[initList.length - 1].sendTimeTS),
         } : {})
 
-        var list=this.data.groupId.split('_',2)
+        var list=this.data.groupId.split('/',2)
         var oppoId
         for(var i=0;i<list.length;i++){
           if(list[i]!=this.data.openId)
             oppoId=list[i]
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
-        this.onScrollToUpper()
       }, '初始化失败')
     },
 
     
-  deleteNewMessageList: function(openid,oppoid){
-    const db = wx.cloud.database()
-    const user = db.collection('user')
-    const _ = db.command
-    var list=[]
-    user.where({
-      _openid: openid
-    }).get({
-      success(res) {
-        list=res.data[0].newmessagelist
-        for(var i=0;i<list.length;i++){
-          if(list[i]==oppoid){
-            console.log(oppoid)
-            list.splice(i,1)
-            user.where({
-              _openid: openid
-            }).update({
-              data: {
-                newmessagelist: list
-              },
-              success: res => {
-              },
-              fail: err => {
-                console.error('[数据库] [更新记录] 失败：', err)
-              }
-            })
-            break
+    deleteNewMessageList: function(openid,oppoid){
+      const db = wx.cloud.database()
+      const user = db.collection('user')
+      const _ = db.command
+      var list=[]
+      user.where({
+        _openid: openid
+      }).get({
+        success(res) {
+          list=res.data[0].newmessagelist
+          for(var i=0;i<list.length;i++){
+            if(list[i]==oppoid){
+              list.splice(i,1)
+              user.where({
+                _openid: openid
+              }).update({
+                data: {
+                  newmessagelist: list
+                },
+                success: res => {
+                },
+                fail: err => {
+                  console.error('[数据库] [更新记录] 失败：', err)
+                }
+              })
+              break
+            }
           }
-        }
-      },
-    })
-  },
+        },
+      })
+    },
+
     async initOpenID() {
       return this.try(async () => {
         const openId = await this.getOpenID()
@@ -231,7 +229,7 @@ Component({
         // 添加newmessagelist
         var openid=snapshot.docChanges[0].doc._openid
         if(openid===this.data.openId){
-          var list=this.data.groupId.split('_',2)
+          var list=this.data.groupId.split('/',2)
           var oppoId
           for(var i=0;i<list.length;i++){
             if(list[i]!=this.data.openId)
@@ -379,7 +377,7 @@ Component({
 
     // 如果是双方第一条消息，更新User表中contactlist字段
     onAddContact(){
-      var list=this.data.groupId.split('_',2)
+      var list=this.data.groupId.split('/',2)
       var oppoId
       for(var i=0;i<list.length;i++){
         if(list[i]!=this.data.openId)
@@ -414,7 +412,6 @@ Component({
         this.setData(SETDATA_SCROLL_TO_BOTTOM)
         return
       }
-      
 
       this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
         this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
