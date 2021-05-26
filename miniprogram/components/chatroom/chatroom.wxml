@@ -1,6 +1,29 @@
-<!-- <view class="chatroom"> -->
-  <cover-view class="header">{{groupName}}</cover-view>
+<!-- contact name -->
+<cover-view class="header">{{groupName}}</cover-view>
+
+<!-- main chatroom -->
 <view class="cu-chat" style="margin-top:50px; margin-bottom:50px">
+  <view class="cu-card article">
+    <view 
+      wx:for="{{requestChats}}"
+      wx:key="{{item._id}}"
+      class="cu-item shadow"
+      bindtap="detail"
+      data-id="{{item._id}}"
+    >
+      <view class="title"><view class="text-cut">{{item.name}}</view></view>
+      <view class="content">
+        <image src="{{item.images_fileID[0]}}" mode="aspectFill"></image>
+        <view class="desc">
+          <view class="text-content">{{item.thing}}</view>
+          <view>
+            <view class="cu-tag df round" style="margin-left:5px">{{item.status}}/{{item.number}}人</view>
+            <view class="cu-tag df round" style="margin-left:5px">￥{{item.price}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
   <view 
     wx:for="{{chats}}"
     wx:key="{{item._id}}"
@@ -26,14 +49,14 @@
       <block wx:else>
         <view class="main" wx:if="{{item.msgType === 'text'}}">
           <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
-          <view class="content bg-green shadow">
+          <view class="content shadow" style="background:#AED581">
             <text>{{item.textContent}}</text>
           </view>
         </view>
 
         <view class="main" wx:if="{{item.msgType === 'request'}}">
           <view class="loading" wx:if="{{item.writeStatus === 'pending'}}">···</view>
-          <view class="content bg-green shadow flex" style="flex-direction: column;">
+          <view class="content shadow flex" style="flex-direction: column;background:#AED581">
             <view class="text-lg text-bold">请求加入您的拼单：</view>
             <view class="send-post" bindtap="detail" data-id="{{item.textContent}}">
               <image src='{{item.postImage}}' style="width:80px;height:80px"></image>
@@ -45,8 +68,8 @@
             <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickAccept" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">同意</button>
             <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickReject" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">拒绝</button>
             <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
-            <view wx:if="{{item.requestStatus === 1}}">已同意</view>
-            <view wx:if="{{item.requestStatus === 2}}">已拒绝</view>
+            <view wx:if="{{item.requestStatus === 1 || item.requestStatus === -1}}">已同意</view>
+            <view wx:if="{{item.requestStatus === 2 || item.requestStatus === -2}}">已拒绝</view>
             <view wx:if="{{item.requestStatus === 3}}">已取消</view>
           </view>
         </view>
@@ -93,8 +116,8 @@
             <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickAccept" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">同意</button>
             <button wx:if="{{openId !== item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickReject" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">拒绝</button>
             <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
-            <view wx:if="{{item.requestStatus === 1}}">已同意</view>
-            <view wx:if="{{item.requestStatus === 2}}">已拒绝</view>
+            <view wx:if="{{item.requestStatus === 1 || item.requestStatus === -1}}">已同意</view>
+            <view wx:if="{{item.requestStatus === 2 || item.requestStatus === -2}}">已拒绝</view>
             <view wx:if="{{item.requestStatus === 3}}">已取消</view>
           </view>
         </view>
@@ -133,4 +156,8 @@
       >请先登录后参与聊天</button>
     </view>
   </view>
-  <!-- </view> -->
+  <!-- to the top of the page -->
+  <!-- <view class="cuIcon-top" class='goTop' bindTap="goTop"></view> -->
+  <view bindtap="goToTop">
+    <image src='../../images/toTop.png' class='goTop'></image>
+  </view>

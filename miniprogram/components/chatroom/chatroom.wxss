@@ -228,3 +228,14 @@ button.userinfo {
   padding:4px;
   width:80px;
 }
+
+.goTop{
+  padding:15rpx;
+  height: 80rpx;
+  width: 80rpx;
+  position: fixed;
+  bottom: 60px;
+  background: #C5E1A5;
+  right: 30rpx;
+  border-radius: 50%;
+}

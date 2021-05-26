@@ -11,6 +11,7 @@ Page({
     contacts:[],
     newmessage:[],
     noContact:true,
+    length:-1,
     hasnew:true,
     contentH:200,
     contentW:0
@@ -77,7 +78,8 @@ Page({
                 else  tmpdict['ifnew']=false
                 tmplist[tmplist.length]=tmpdict
                 this.setData({
-                  contacts: tmplist
+                  contacts: tmplist,
+                  length:tmplist.length
                 })
               },
               fail: err => {
@@ -86,9 +88,9 @@ Page({
             })
           }
         }
-        if (this.data.contacts.length!=0){
+        if (this.data.contacts.length==0){
           this.setData({
-            noContact:false
+            length:0
           })
         }
       },
