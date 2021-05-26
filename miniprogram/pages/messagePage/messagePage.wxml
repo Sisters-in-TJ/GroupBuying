@@ -1,7 +1,8 @@
 <!-- miniprogram/pages/messagePage/messagePage.wxml -->
-<pullfresh width='{{contentW}}' height='{{contentH}}' background="#FFE700" timeout='1000' enablemore='true' bind:onRefresh='onRefresh'>
-  <view slot='content' class='overall' wx:if="{{contacts.length!==0}}">
-    <view wx:key="name" wx:for="{{contacts}}">
+<pullfresh width='{{contentW}}' height='{{contentH}}' background="#C5E1A5" timeout='1000' enablemore='true' bind:onRefresh='onRefresh'>
+  <view slot='content' class='overall'>
+    <view class="cu-load bg-white loading" wx:if="{{length===-1}}"></view>
+    <view wx:key="name" wx:for="{{contacts}}" wx:if="{{length>0}}">
       <navigator url="./room/room?contact={{item.openid}}" open-type="navigate" class="layout_horizontal">
         <view class="cu-avatar round xl margin-bottom" style="background-image:url({{item.avatarUrl}});"></view>
         <!-- <image src='{{item.avatarUrl}}' style="width:45px;height:45px"></image> -->
@@ -10,7 +11,7 @@
         <text wx:if="{{item.ifnew}}" class="text-lg text-gray" style="padding-top:12px;padding-left:12px">有未读</text>
       </navigator>
     </view>
-    <view wx:if="{{contacts.length===0}}">
+    <view wx:if="{{length===0}}">
       <view class="text-xl text-gray">您还没有任何消息</view>
     </view>
   </view>

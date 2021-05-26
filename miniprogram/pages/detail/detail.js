@@ -89,8 +89,6 @@ Page({
       this.ifexists()
     
     },    
-<<<<<<< HEAD
-=======
 
     ifexists:function(){
       console.log(app.globalData.openid)
@@ -106,7 +104,6 @@ Page({
         })
       
     },  
->>>>>>> aa277e805e3cc1f4a02c5ea62486b91607a41a72
     
 
 
@@ -159,28 +156,11 @@ Page({
               if (res.confirm) {
 
                 console.log('用户点击确定');
-                that.data.status++;
                 var contact=that.data._openid;
-                console.log(contact);
-                db.collection('post').doc(that.data.id).update({
-                  data: {
-                    status:that.data.status,
-                    openidList:_.push([app.globalData.openid]),
-                    need:that.data.number-that.data.status,
-                  }
-                })
                 that.sendRequest()
                 wx.navigateTo({
                   url: '../messagePage/room/room?contact='+contact,
-                })
-                wx.showToast({
-                title: '申请加入成功',
-                duration: 2000,
-                icon: 'success',             
-                mask: true,
-                
-                })
-                console.log('after=>',that.data.status);              
+                })            
               } else if (res.cancel) {
 
                 console.log('用户点击取消',that.data.status);
@@ -297,11 +277,12 @@ Page({
     }).get({
       success(res) {
         list=res.data[0].newmessagelist
-        for(var i=0;i<list.length;i++){
+        var i=0;
+        for(i=0;i<list.length;i++){
           if(list[i]==oppoid)
             flag=true
         }
-        if(!flag){
+        if(!flag && i==list.length){
           user.where({
             _openid: openid
           }).update({
@@ -343,11 +324,12 @@ Page({
     }).get({
       success:function(res) {
         list=res.data[0].contactlist
-        for(var i=0;i<list.length;i++){
+        var i=0;
+        for(i=0;i<list.length;i++){
               if(list[i]==id2)
               flag1=true
           }
-          if(!flag1){
+          if(!flag1 && i==list.length){
 
               user.where({
               _openid: id1
@@ -365,12 +347,12 @@ Page({
     }).get({
       success:function(res) {
           list2=res.data[0].contactlist
-    
-          for(var i=0;i<list2.length;i++){
+          var i=0
+          for(i=0;i<list2.length;i++){
               if(list2[i]===id1)
               flag2=true
           }
-          if(!flag2){
+          if(!flag2 && i==list.length){
 
               user.where({
               _openid: id2
