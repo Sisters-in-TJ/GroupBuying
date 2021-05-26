@@ -76,6 +76,13 @@ Page({
         duration: 1500
       })
     }
+    else if(that.data.imageList== 0){
+      wx.showToast({
+        title: '图片不能为空',
+        icon: 'none',
+        duration: 1500
+      })
+    }
     else if(this.data.loading){
       wx.showModal({
         title: '提示',
