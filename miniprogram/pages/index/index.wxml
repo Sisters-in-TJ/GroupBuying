@@ -54,7 +54,7 @@
                         <view class="card_author text-cut">
                                           {{item.multiArray[0][item.multiIndex[0]].name}}
                                           {{item.multiArray[1].length > 0 ?(" " + item.multiArray[1][item.multiIndex[1]].name):""}}
-                                    </view>
+                        </view>
                         <view class="card_author text-cut">{{item.status}}/{{item.number}}人
                         </view>
                         <view class="card_between">
