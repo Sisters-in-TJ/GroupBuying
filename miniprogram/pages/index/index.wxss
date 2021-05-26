@@ -52,7 +52,7 @@ page {
 
 .top_box {
   width: 100%;
-  background: #FFE700;
+  background: #C5E1A5;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -114,10 +114,10 @@ page {
   color: rgb(167, 167, 167);
 }
 .tab-on {
-  color: #fbbd08;
+  color: #C5E1A5;
   font-size: 32rpx !important;
   font-weight: 600;
-  border-bottom: 4rpx solid #fbbd08 !important;
+  border-bottom: 4rpx solid #C5E1A5 !important;
 }
 .kind_contain {
   width: 100%;
@@ -195,7 +195,7 @@ page {
   letter-spacing: 2rpx;
 }
 .list-on {
-  background: #fbbd08;
+  background: #C5E1A5;
   color: #fff;
   border: none !important;
 }

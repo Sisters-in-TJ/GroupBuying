@@ -14,7 +14,7 @@
   "tabBar": {
     "backgroundColor": "#ffffff",
     "color": "#979795",
-    "selectedColor": "#1c1c1b",
+    "selectedColor": "#C5E1A5",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -43,9 +43,9 @@
     ]
   },
   "window": {
-    "backgroundColor": "#FFE700",
+    "backgroundColor": "#C5E1A5",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FFE700",
+    "navigationBarBackgroundColor": "#C5E1A5",
     "navigationBarTitleText": "GroupBuying",
     "navigationBarTextStyle": "black"
   },
