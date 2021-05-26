@@ -25,6 +25,11 @@ Page({
     openidList:[],
     publishidlist:[],
     l_length:0,
+    multiArray: [],
+    multiIndex: [0,0,0]
+  },
+  onLoad: function (options) {
+    this.getCityInfo();//new
   },
   createPost(e) {
     let that = this
@@ -151,11 +156,18 @@ Page({
         imageList: this.data.imageList,
         images_fileID: this.data.images_fileID,
         creat: new Date().getTime(),
-        key: this.data.name + this.data.thing,
+        key: this.data.name 
+        +this.data.thing
+        +this.data.address
+        +this.data.multiArray[0][this.data.multiIndex[0]].name
+        +this.data.multiArray[1][this.data.multiIndex[1]].name
+        +this.data.multiArray[2][this.data.multiIndex[2]].name,
         status: 1, //已拼几人
         need: Number(this.data.number)-1,//还需要几个人
         dura: new Date().getTime() + this.data.dura * (24 * 60 * 60 * 1000),
         openidList:this.data.openidList,
+        multiIndex:this.data.multiIndex,
+        multiArray:this.data.multiArray
       },
       success: res => {
         // 在返回结果中会包含新创建的记录的 _id
@@ -300,5 +312,77 @@ Page({
       imageList:[],
       images_fileID:[]
     })
+  },
+  getCityInfo: function(){//new
+    wx.showLoading({
+      title: 'Loading...',
+    })
+    const db = wx.cloud.database()
+    //因为数据库只存有一个总的数据字典，所以指定它的ID直接获取数据
+    var that = this
+    db.collection('cityDataArr').doc('3d27439a60adf5270003fcb420987c30').get({
+      success: res => {
+        wx.hideLoading();
+        if (res.data){
+          //获取云数据库数据
+          var temp = res.data.data;
+          //初始化更新数据
+          that.setData({
+            provinces: temp,
+            multiArray: [temp, temp[0].citys, temp[0].citys[0].areas],
+            multiIndex: [0, 0, 0]
+          })
+          console.log(that.data.provinces)
+        }
+      },
+      fail: err => {
+        wx.hideLoading();
+        console.error(err)
+      }
+    })     
+  },
+  //点击确定
+  bindMultiPickerChange: function (e) {
+    console.log('picker发送选择改变，携带值为', e.detail.value)
+    this.setData({
+      multiIndex: e.detail.value
+    })
+  },
+  //滑动
+  bindMultiPickerColumnChange: function(e){
+    console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
+    var data = {
+      multiArray: this.data.multiArray,
+      multiIndex: this.data.multiIndex
+    };
+    //更新滑动的第几列e.detail.column的数组下标值e.detail.value
+    data.multiIndex[e.detail.column] = e.detail.value;
+    //如果更新的是第一列“省”，第二列“市”和第三列“区”的数组下标置为0
+    if (e.detail.column == 0){
+      data.multiIndex = [e.detail.value,0,0];
+    } else if (e.detail.column == 1){
+      //如果更新的是第二列“市”，第一列“省”的下标不变，第三列“区”的数组下标置为0
+      data.multiIndex = [data.multiIndex[0], e.detail.value, 0];
+    } else if (e.detail.column == 2) {
+      //如果更新的是第三列“区”，第一列“省”和第二列“市”的值均不变。
+      data.multiIndex = [data.multiIndex[0], data.multiIndex[1], e.detail.value];
+    }
+    var temp = this.data.provinces;
+    data.multiArray[0] = temp;
+    if ((temp[data.multiIndex[0]].citys).length > 0){
+      //如果第二列“市”的个数大于0,通过multiIndex变更multiArray[1]的值
+      data.multiArray[1] = temp[data.multiIndex[0]].citys;
+      var areaArr = (temp[data.multiIndex[0]].citys[data.multiIndex[1]]).areas;
+      //如果第三列“区”的个数大于0,通过multiIndex变更multiArray[2]的值；否则赋值为空数组
+      data.multiArray[2] = areaArr.length > 0 ? areaArr : [];
+    }else{
+      //如果第二列“市”的个数不大于0，那么第二列“市”和第三列“区”都赋值为空数组
+      data.multiArray[1] = [];
+      data.multiArray[2] = [];
+    }
+    //data.multiArray = [temp, temp[data.multiIndex[0]].citys, temp[data.multiIndex[0]].citys[data.multiIndex[1]].areas];
+    //setData更新数据
+    this.setData(data);
+    console.log(this.data.multiIndex,this.data.multiArray)
   }
 })

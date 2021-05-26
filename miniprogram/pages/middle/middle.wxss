@@ -121,3 +121,11 @@
   letter-spacing: 2rpx;
   color: #8c9aa8;
 }
+.areapicker{
+  height: 100rpx;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
+}
