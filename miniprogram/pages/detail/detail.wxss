@@ -22,10 +22,6 @@
     height:80rpx !important;
   }
 
-  .chat_bt{
-    display: flex;
-    justify-content: center;
-  }
   .theme{
     color:grey;
     font-size: 30rpx;

@@ -1,7 +1,7 @@
 /* pages/mine/mine.wxss */
 .background {
   height: 170px;
-  background: #FFE700;
+  background: #C5E1A5;
 }
 
 .head {

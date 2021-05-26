@@ -180,35 +180,7 @@ Page({
       numberBlur(e) {
         this.data.number=e.detail.value;
       },
-      chooseImage: function (event) {
-        var that = this;
-        wx.chooseImage({
-          count: 3, // 一次最多可以选择2张图片一起上传
-          sizeType: ['original', 'compressed'],//可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'], //可以指定来源是相册还是相机，默认二者都有
-          success: function (res) {
-            console.log(res)
-            var imageList = that.data.imageList.concat(res.tempFilePaths);
-            var imageUrl = imageList[0].split("/");
-            var imagename = imageUrl[imageUrl.length - 1];//得到图片的名称
-            var images_fileID = that.data.images_fileID;
-            wx.cloud.uploadFile({
-              cloudPath: "community/article_images/" + imagename,  
-              filePath: imageList[0],
-              success:res =>{
-                images_fileID.push(res.fileID);
-                that.setData({
-                  images_fileID: images_fileID//更新data中的fileID
-                })
-              }
-            })
-            that.setData({
-              imageList: imageList
-            });
-          }
-        })
       
-      },
       previewImage: function (e) {
         var that = this;
         var dataid = e.currentTarget.dataset.id;
@@ -220,7 +192,9 @@ Page({
       },
       bindPickerChange(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
-        this.data.cids=e.detail.value;
+        this.setData({
+          cids: e.detail.value
+        })
       },
       bindlongpressimg(e){
         let that = this

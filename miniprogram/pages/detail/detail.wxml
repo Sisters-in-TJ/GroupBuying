@@ -45,28 +45,30 @@
               <text class="theme">{{status}}/{{number}}人</text>                            
             </view>
 
-            <text class="space">\n</text>  
-
-    <view class="btn-area" id="buttonContainer">
-      <button  formType="submit" 
-      bindtap="join" class="bt" style='position:fixed;bottom:10px'>加入</button>
+    <view class="grid col-5 padding-sm" id="buttonContainer">
+      <view class="margin-tb-sm text-center" v-for="(item,index) in ColorList" :key="index" >
+        <button class="cu-btn round 'lines-olive'"
+          style="position:fixed;bottom:15px;left:10px;width:150rpx"
+          bindtap="join">加 入</button>
+	    </view>
       <!-- <navigator url="../messagePage/room/room?contact={{_openid}}" open-type="navigate">
       <button bindtap='sendRequest' class="bt">加入</button> -->
       <!-- 传参拼单id -->
       <!-- </navigator> -->
     
       <navigator url="../messagePage/room/room?contact={{_openid}}&request=false" open-type="navigate">
-        <view class="chat_bt">
-        <button class="bt"
-        style='position:fixed;bottom:10px;'>聊天</button>
+        <view class="margin-tb-sm text-center" v-for="(item,index) in ColorList" :key="index">
+        <button class="cu-btn round 'lines-olive'"
+        style='position:fixed;bottom:15px;width:150rpx'>聊 天</button>
         </view>
         </navigator>
-      <text class="space">\n</text>
-
-      <button  bindtap="collect" class="bt"
-      style='position:fixed;bottom:10px;right:10px'>
-        <text class="bt_text">收藏</text>
+    <view class="margin-tb-sm text-center"  v-for="(item,index) in ColorList" :key="index">
+      <button  bindtap="collect" class="cu-btn round 'lines-olive'"
+      style='position:fixed;bottom:15px;right:10px;width:150rpx'>
+        <text class="bt_text">收 藏</text>
       </button>
     </view>
+    </view>
+ 
   </view>
 </view>

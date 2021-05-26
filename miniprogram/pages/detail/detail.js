@@ -89,8 +89,7 @@ Page({
       this.ifexists()
     
     },    
-<<<<<<< HEAD
-=======
+
 
     ifexists:function(){
       console.log(app.globalData.openid)
@@ -106,7 +105,7 @@ Page({
         })
       
     },  
->>>>>>> aa277e805e3cc1f4a02c5ea62486b91607a41a72
+
     
 
 
@@ -159,16 +158,8 @@ Page({
               if (res.confirm) {
 
                 console.log('用户点击确定');
-                that.data.status++;
                 var contact=that.data._openid;
                 console.log(contact);
-                db.collection('post').doc(that.data.id).update({
-                  data: {
-                    status:that.data.status,
-                    openidList:_.push([app.globalData.openid]),
-                    need:that.data.number-that.data.status,
-                  }
-                })
                 that.sendRequest()
                 wx.navigateTo({
                   url: '../messagePage/room/room?contact='+contact,

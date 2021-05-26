@@ -3,7 +3,7 @@
   <!-- PICTURE -->
   <view class="b_top">
   <block wx:for="{{images_fileID}}">
-    <view class="b_poster" bindtap="chooseImage">
+    <view class="b_poster">
       <image src="{{item}}"
       class="pic"></image>
     </view>
@@ -26,7 +26,6 @@
     <view class="b_picker">
       <picker bindchange="bindPickerChange" value="{{cids}}" range="{{kind}}" range-key="name">
       <block wx:if="{{cids!==-1}}">当前选择：{{kind[cids].name}}</block>
-      <block wx:if="{{cids==-1}}">请选择</block>
       <image class="right" src="/images/right.png" />
       </picker>
     </view>
