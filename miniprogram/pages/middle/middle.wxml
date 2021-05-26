@@ -40,8 +40,16 @@
     </view>
   </view>
   <view class="b_border"></view>
+  <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}" range-key="name">
+    <button class="areapicker">
+      {{multiArray[0][multiIndex[0]].name}}
+      {{multiArray[1].length > 0 ?(" " + multiArray[1][multiIndex[1]].name):""}}
+      {{multiArray[2].length > 0 ?(" " + multiArray[2][multiIndex[2]].name):""}}
+    </button>
+  </picker>
+  <view class="b_border"></view>
   <view class="b_bar">
-    <input placeholder="拼单地址" value="{{address}}" bindblur="addressBlur"/>
+    <input placeholder="详细地址" value="{{address}}" bindblur="addressBlur"/>
   </view>
   <view class="b_border"></view>
   <view class="b_bar">
