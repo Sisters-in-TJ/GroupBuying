@@ -105,10 +105,7 @@ Page({
         })
       
     },  
-
     
-
-
     join:function(){
       var that=this
       db.collection('post').where({
@@ -163,15 +160,7 @@ Page({
                 that.sendRequest()
                 wx.navigateTo({
                   url: '../messagePage/room/room?contact='+contact,
-                })
-                wx.showToast({
-                title: '申请加入成功',
-                duration: 2000,
-                icon: 'success',             
-                mask: true,
-                
-                })
-                console.log('after=>',that.data.status);              
+                })            
               } else if (res.cancel) {
 
                 console.log('用户点击取消',that.data.status);
@@ -277,36 +266,118 @@ Page({
     })
   },
 
-  addNewMessage:function(openid,oppoid){
-    wx.cloud.callFunction({
-      name: 'addNewMessage',
-      data: {
-        openid:oppoid,
-        oppoid:openid
-      },
-      success: res => {
-        console.log('newmessagelist更新成功')
-      },
-      fail: err => {
-        console.error('[云函数] [addNewMessage] 调用失败：', err)
+  addNewMessage:function(oppoid,openid){
+    const db = wx.cloud.database()
+    const user = db.collection('user')
+    const _ = db.command
+    var flag=false
+    var list=[]
+    user.where({
+      _openid: openid
+    }).get({
+      success(res) {
+        list=res.data[0].newmessagelist
+        var i=0;
+        for(i=0;i<list.length;i++){
+          if(list[i]==oppoid)
+            flag=true
+        }
+        if(!flag && i==list.length){
+          user.where({
+            _openid: openid
+          }).update({
+            data: {
+              newmessagelist: _.push(oppoid)
+            },
+            success: res => {
+            },
+            fail: err => {
+              console.error('[数据库] [更新记录] 失败：', err)
+            }
+          })
+        }
       }
     })
+    // wx.cloud.callFunction({
+    //   name: 'addNewMessage',
+    //   data: {
+    //     openid:oppoid,
+    //     oppoid:openid
+    //   },
+    //   success: res => {
+    //     console.log('newmessagelist更新成功')
+    //   },
+    //   fail: err => {
+    //     console.error('[云函数] [addNewMessage] 调用失败：', err)
+    //   }
+    // })
   },
   addContact:function(id1,id2){
-    //调用addContact，更新user
-    wx.cloud.callFunction({
-      name: 'addContact',
-      data: {
-        id1:id1,
-        id2:id2
-      },
-      success: res => {
-        console.log('联系人加入成功')
-      },
-      fail: err => {
-        console.error('[云函数] [addContact] 调用失败：', err)
+    const db = wx.cloud.database()
+    const user = db.collection('user')
+    const _ = db.command
+    var flag1=false
+    var flag2=false
+    var list=[]
+    user.where({
+      _openid: id1
+    }).get({
+      success:function(res) {
+        list=res.data[0].contactlist
+        var i=0;
+        for(i=0;i<list.length;i++){
+              if(list[i]==id2)
+              flag1=true
+          }
+          if(!flag1 && i==list.length){
+
+              user.where({
+              _openid: id1
+              }).update({
+              data: {
+                  contactlist: _.push(id2)
+              }
+              })
+          }
       }
     })
+    var list2=[]
+    user.where({
+      _openid: id2
+    }).get({
+      success:function(res) {
+          list2=res.data[0].contactlist
+          var i=0
+          for(i=0;i<list2.length;i++){
+              if(list2[i]===id1)
+              flag2=true
+          }
+          if(!flag2 && i==list.length){
+
+              user.where({
+              _openid: id2
+              }).update({
+              data: {
+                  contactlist: _.push(id1),
+              }
+              })
+          }
+      }
+    })
+    // //调用addContact，更新user
+    // wx.cloud.callFunction({
+    //   name: 'addContact',
+    //   data: {
+    //     id1:id1,
+    //     id2:id2
+    //   },
+    //   success: res => {
+    //     console.log('联系人加入成功')
+    //   },
+    //   fail: err => {
+    //     console.error('[云函数] [addContact] 调用失败：', err)
+    //   }
+    // })
   },
 
   getOpenID: async function() {

@@ -48,6 +48,10 @@
                               <view class="list_word">
                                     <view class="list_title text-cut">{{item.name}}
                                     </view>
+                                    <view class="list_author text-cut">
+                                          {{item.multiArray[0][item.multiIndex[0]].name}}
+                                          {{item.multiArray[1].length > 0 ?(" " + item.multiArray[1][item.multiIndex[1]].name):""}}
+                                     </view>
                                     <view class="list_author text-cut">{{item.thing}}
                                     </view>
                               </view>

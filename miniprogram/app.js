@@ -1,7 +1,11 @@
 // app.js
 App({
   onLaunch() {
-   // wx.hideTabBar();//隐藏系统自带的tabBar
+    var curtime = Date.parse(new Date());
+    var time = Date.parse(new Date(2021,4,10))
+    if(curtime.valueOf()<time.valueOf()){
+      wx.hideTabBar();//隐藏系统自带的tabBar
+    }
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {

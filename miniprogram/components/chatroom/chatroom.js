@@ -1,8 +1,8 @@
-const FATAL_REBUILD_TOLERANCE = 10
-const SETDATA_SCROLL_TO_BOTTOM = {
-  scrollTop: 100000,
-  scrollWithAnimation: true,
-}
+// const FATAL_REBUILD_TOLERANCE = 10
+// const SETDATA_SCROLL_TO_BOTTOM = {
+//   scrollTop: 100000,
+//   scrollWithAnimation: true,
+// }
 
 Component({
   properties: {
@@ -27,7 +27,8 @@ Component({
     scrollTop: 0,
     scrollToMessage: '',
     hasKeyboard: false,
-    requestChats: [],   // 未定状态的拼单加入请求
+    requestChats: [],   // 本人发出的拼单请求
+    first:true,
   },
 
   methods: {
@@ -60,23 +61,79 @@ Component({
         const { data: initList } = await db.collection(collection).where(this.mergeCommonCriteria()).orderBy('sendTimeTS', 'desc').get()
 
         console.log('init query chats', initList)
+        for(var i=0;i<initList.length;i++){
+          initList[i]['time']=initList[i].sendTime.toLocaleString().replace(/:\d{1,2}$/,' ')
+        }
         this.setData({
           chats: initList.reverse(),
-          scrollTop: 10000,
+          // scrollTop: 10000,
         })
 
+        // 更新requestids
+        // let that=this
+        // var requestids=[]
+        // var flag=false
+        // for(var i=0;i<this.data.chats.length;i++){
+        //   if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId){
+        //     db.collection("post").doc(this.data.chats[i].textContent).get({
+        //       success(res) {
+        //         flag=false
+        //         for(var j=0;j<requestids.length;j++){
+        //           if(requestids[j]==res.data._id){
+        //             flag=true
+        //           }
+        //         }
+        //         let change = "requestChats[" + that.data.requestChats.length + "]"
+        //         if(!flag){
+        //           that.setData({
+        //             [change]: res.data
+        //           })
+        //           requestids[requestids.length]=res.data._id
+        //         }
+        //       }
+        //     })
+        //   }
+        // }
+        await this.updateRequestChats()
+
+        // 判断是否有拼单请求状态变化
         for(var i=0;i<this.data.chats.length;i++){
-          if(this.data.chats[i].msgType=="request" && this.data.chats[i].requestStatus==0){
-            let change = "requestChats[" + this.data.requestChats.length + "]"
-            this.setData({
-              [change]: this.data.chats[i]._id
+          if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId){
+            if(this.data.chats[i].requestStatus===1){
+              console.log("1")
+              wx.showModal({
+                title: '您已加入此拼单',
+                content: this.data.chats[i].postName,
+                showCancel: false,
+              })
+              db.collection("chatroom").doc(this.data.chats[i]._id).update({
+                data: {
+                  requestStatus: -1
+                }
+              })
+            }
+            else if(this.data.chats[i].requestStatus===2){
+              console.log("2")
+              wx.showModal({
+                title: '您已被拒绝加入此拼单',
+                content: this.data.chats[i].postName,
+                showCancel: false,
             })
+            db.collection("chatroom").doc(this.data.chats[i]._id).update({
+              data: {
+                requestStatus: -2
+              }
+            })
+            }
           }
         }
 
         this.initWatch(initList.length ? {
           sendTimeTS: _.gt(initList[initList.length - 1].sendTimeTS),
         } : {})
+        this.setData({
+          first:false
+        })
 
         var list=this.data.groupId.split('/',2)
         var oppoId
@@ -85,7 +142,39 @@ Component({
             oppoId=list[i]
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
+        wx.pageScrollTo({
+          scrollTop: 200*this.data.chats.length
+        })
       }, '初始化失败')
+    },
+
+    updateRequestChats:async function(){
+      const db = this.db
+      const _ = db.command
+      let that=this
+        var requestids=[]
+        var flag=false
+        for(var i=0;i<this.data.chats.length;i++){
+          if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId){
+            db.collection("post").doc(this.data.chats[i].textContent).get({
+              success(res) {
+                flag=false
+                for(var j=0;j<requestids.length;j++){
+                  if(requestids[j]==res.data._id){
+                    flag=true
+                  }
+                }
+                let change = "requestChats[" + that.data.requestChats.length + "]"
+                if(!flag){
+                  that.setData({
+                    [change]: res.data
+                  })
+                  requestids[requestids.length]=res.data._id
+                }
+              }
+            })
+          }
+        }
     },
 
     
@@ -158,8 +247,12 @@ Component({
         })
 
         // 监听2：拼单请求变化（同意/拒绝）
-        for(var i=0;i<this.data.requestChats.length;i++){
-          const watcher = db.collection('chatroom').doc(this.data.requestChats[i])
+        this.requestListener=[]
+        var that=this
+        for(var i=0;i<this.data.chats.length;i++){
+          if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId && this.data.chats[i].requestStatus===0){
+            var id=this.data.chats[i]._id
+            this.requestListener[this.requestListener.length] = db.collection('chatroom').doc(this.data.chats[i]._id)
           .watch({
             onChange: function(snapshot) {
               if(snapshot.type!=="init" && snapshot.docs[0]._openid===openId){
@@ -169,6 +262,12 @@ Component({
                     content: snapshot.docs[0].postName,
                     showCancel: false,
                  })
+                 db.collection("chatroom").doc(id).update({
+                   data: {
+                     requestStatus: -1
+                   }
+                 })
+                 that.initRoom()
                 }
                 else if(snapshot.docs[0].requestStatus===2){
                   wx.showModal({
@@ -176,6 +275,13 @@ Component({
                     content: snapshot.docs[0].postName,
                     showCancel: false,
                  })
+                 console.log(id)
+                 db.collection("chatroom").doc(id).update({
+                   data: {
+                     requestStatus: -2
+                   }
+                 })
+                 that.initRoom()
                 }
               }
             },
@@ -184,6 +290,7 @@ Component({
             }
           })
         }
+      }
       }, '初始化监听失败')
     },
 
@@ -197,7 +304,7 @@ Component({
             ...[...snapshot.docs].sort((x, y) => x.sendTimeTS - y.sendTimeTS),
           ],
         })
-        this.scrollToBottom()
+        // this.scrollToBottom()
         this.inited = true
       } else {
         let hasNewMessage = false
@@ -235,27 +342,50 @@ Component({
             if(list[i]!=this.data.openId)
               oppoId=list[i]
           }
-          wx.cloud.callFunction({
-            name: 'addNewMessage',
-            data: {
-              openid:oppoId,
-              oppoid:this.data.openId
-            },
-            success: res => {
-              console.log('newmessagelist更新成功')
-            },
-            fail: err => {
-              console.error('[云函数] [addNewMessage] 调用失败：', err)
-            }
-          })
+          this.addNewMessage(oppoId,this.data.openId)
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
-        if (hasOthersMessage || hasNewMessage) {
-          this.scrollToBottom()
-        }
+          wx.pageScrollTo({
+            scrollTop: 200*this.data.chats.length
+          })
       }
     },
 
+    addNewMessage:function(openid,oppoid){
+      const db = wx.cloud.database()
+      const user = db.collection('user')
+      const _ = db.command
+      var flag=false
+      var list=[]
+      user.where({
+        _openid: openid
+      }).get({
+        success(res) {
+          list=res.data[0].newmessagelist
+          var i=0
+          for(i=0;i<list.length;i++){
+            if(list[i]==oppoid)
+              flag=true
+          }
+          console.log(list,oppoid)
+          console.log(flag)
+          if(!flag && i==list.length){
+            user.where({
+              _openid: openid
+            }).update({
+              data: {
+                newmessagelist: _.push(oppoid)
+              },
+              success: res => {
+              },
+              fail: err => {
+                console.error('[数据库] [更新记录] 失败：', err)
+              }
+            })
+          }
+        }
+      })
+    },
     async onConfirmSendText(e) {
       this.try(async () => {
         if (!e.detail.value) {
@@ -271,7 +401,7 @@ Component({
           groupId: this.data.groupId,
           avatar: this.data.userInfo.avatarUrl,
           nickName: this.data.userInfo.name,
-          msgType: 'text',  // 'request' 'answer'
+          msgType: 'text',  // 'request'
           textContent: e.detail.value,
           sendTime: new Date(),
           sendTimeTS: Date.now(), // fallback
@@ -288,7 +418,7 @@ Component({
             },
           ],
         })
-        this.scrollToBottom(true)
+        // this.scrollToBottom(true)
 
         await db.collection(collection).add({
           data: doc,
@@ -335,7 +465,7 @@ Component({
               },
             ]
           })
-          this.scrollToBottom(true)
+          // this.scrollToBottom(true)
 
           const uploadTask = wx.cloud.uploadFile({
             cloudPath: `${this.data.openId}/${Math.random()}_${Date.now()}.${res.tempFilePaths[0].match(/\.(\w+)$/)[1]}`,
@@ -383,21 +513,73 @@ Component({
         if(list[i]!=this.data.openId)
           oppoId=list[i]
       }
+      var id1=this.data.openId
+      var id2=oppoId
+      const db = wx.cloud.database()
+      const user = db.collection('user')
+      const _ = db.command
+      var flag1=false
+      var flag2=false
+      var list=[]
+      user.where({
+        _openid: id1
+      }).get({
+        success:function(res) {
+          list=res.data[0].contactlist
+          var i=0;
+          for(i=0;i<list.length;i++){
+                if(list[i]==id2)
+                flag1=true
+            }
+            if(!flag1 && i==list.length){
 
-      //调用addContact，更新user
-      wx.cloud.callFunction({
-        name: 'addContact',
-        data: {
-          id1:this.data.openId,
-          id2:oppoId
-        },
-        success: res => {
-          console.log('联系人加入成功')
-        },
-        fail: err => {
-          console.error('[云函数] [addContact] 调用失败：', err)
+                user.where({
+                _openid: id1
+                }).update({
+                data: {
+                    contactlist: _.push(id2)
+                }
+                })
+            }
         }
       })
+      var list2=[]
+      user.where({
+        _openid: id2
+      }).get({
+        success:function(res) {
+            list2=res.data[0].contactlist
+            var i=0
+            for(i=0;i<list2.length;i++){
+                if(list2[i]===id1)
+                flag2=true
+            }
+            if(!flag2 && i==list.length){
+
+                user.where({
+                _openid: id2
+                }).update({
+                data: {
+                    contactlist: _.push(id1),
+                }
+                })
+            }
+        }
+      })
+      //调用addContact，更新user
+      // wx.cloud.callFunction({
+      //   name: 'addContact',
+      //   data: {
+      //     id1:this.data.openId,
+      //     id2:oppoId
+      //   },
+      //   success: res => {
+      //     console.log('联系人加入成功')
+      //   },
+      //   fail: err => {
+      //     console.error('[云函数] [addContact] 调用失败：', err)
+      //   }
+      // })
     },
 
     onMessageImageTap(e) {
@@ -406,38 +588,38 @@ Component({
       })
     },
 
-    scrollToBottom(force) {
-      if (force) {
-        console.log('force scroll to bottom')
-        this.setData(SETDATA_SCROLL_TO_BOTTOM)
-        return
-      }
+    // scrollToBottom(force) {
+    //   if (force) {
+    //     console.log('force scroll to bottom')
+    //     this.setData(SETDATA_SCROLL_TO_BOTTOM)
+    //     return
+    //   }
 
-      this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
-        this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
-          if (scroll.scrollTop + bodyRect.height * 3 > scroll.scrollHeight) {
-            console.log('should scroll to bottom')
-            this.setData(SETDATA_SCROLL_TO_BOTTOM)
-          }
-        }).exec()
-      }).exec()
-    },
+    //   this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
+    //     this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
+    //       if (scroll.scrollTop + bodyRect.height * 3 > scroll.scrollHeight) {
+    //         console.log('should scroll to bottom')
+    //         this.setData(SETDATA_SCROLL_TO_BOTTOM)
+    //       }
+    //     }).exec()
+    //   }).exec()
+    // },
 
-    async onScrollToUpper() {
-      if (this.db && this.data.chats.length) {
-        const { collection } = this.properties
-        const _ = this.db.command
-        const { data } = await this.db.collection(collection).where(this.mergeCommonCriteria({
-          sendTimeTS: _.lt(this.data.chats[0].sendTimeTS),
-        })).orderBy('sendTimeTS', 'desc').get()
-        this.data.chats.unshift(...data.reverse())
-        this.setData({
-          chats: this.data.chats,
-          scrollToMessage: `item-${data.length}`,
-          scrollWithAnimation: false,
-        })
-      }
-    },
+    // async onScrollToUpper() {
+    //   if (this.db && this.data.chats.length) {
+    //     const { collection } = this.properties
+    //     const _ = this.db.command
+    //     const { data } = await this.db.collection(collection).where(this.mergeCommonCriteria({
+    //       sendTimeTS: _.lt(this.data.chats[0].sendTimeTS),
+    //     })).orderBy('sendTimeTS', 'desc').get()
+    //     this.data.chats.unshift(...data.reverse())
+    //     this.setData({
+    //       chats: this.data.chats,
+    //       scrollToMessage: `item-${data.length}`,
+    //       scrollWithAnimation: false,
+    //     })
+    //   }
+    // },
 
     async try(fn, title) {
       try {
@@ -460,18 +642,42 @@ Component({
       })
     },
 
-    // 优化时可以考虑这一部分的代码复用，三个函数合并
     // 同意后要更新数据库中数据，如拼单人数，个人已拼单
     async onClickAccept(event){
+      var that=this
+      const db = wx.cloud.database()
+      db.collection('post').doc(event.currentTarget.dataset.request.textContent)
+      .get({
+        success: res=>{
+          // 如果人数已满
+          console.log(res)
+          if(res.data.need==0){
+            wx.showModal({
+              title: '该拼单已满员!',
+              content: '无法加入其他人员，已帮您拒绝该拼单请求。',
+              showCancel: false,
+           })
+            that.onClickReject(event)
+          }
+          else{
+            that.accept(event)
+          }
+        }
+      })
+      this.initRoom()
+    },
+
+    async accept(event){
       const db = wx.cloud.database()
       await db.collection('chatroom').doc(event.currentTarget.dataset.request._id).update({
         data: {
          requestStatus: 1
         },
-      })
+       })
       var postid=event.currentTarget.dataset.request.textContent
       var applyid=event.currentTarget.dataset.request._openid
       this.joinAndUpdate(postid,applyid)
+      this.addNewMessage(event.currentTarget.dataset.request._openid,this.data.openId)
       this.initRoom()
     },
 
@@ -482,6 +688,7 @@ Component({
          requestStatus: 2
         },
        })
+      this.addNewMessage(event.currentTarget.dataset.request._openid,this.data.openId)
       this.initRoom()
     },
 
@@ -536,11 +743,31 @@ Component({
         }
       })
     },
+    // 回到顶部
+    goToTop: function (e) {
+      if (wx.pageScrollTo) {
+        wx.pageScrollTo({
+          scrollTop: 0
+        })
+      } else {
+        wx.showModal({
+          title: '提示',
+          content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+        })
+      }
+    },
   },
 
   ready() {
     global.chatroom = this
     this.initRoom()
     this.fatalRebuildCount = 0
+  },
+  detached: function() {
+    // 在组件实例被从页面节点树移除时执行
+    this.messageListener.close()
+    for(var i=0;i<this.requestListener.length;i++){
+      this.requestListener[i].close()
+    }
   },
 })
