@@ -5,7 +5,7 @@
 <view class="cu-chat" style="margin-top:50px; margin-bottom:50px">
   <view class="cu-card article">
     <view 
-      wx:for="{{requestChats}}"
+      wx:for="{{oppoPost}}"
       wx:key="{{item._id}}"
       class="cu-item shadow"
       bindtap="detail"

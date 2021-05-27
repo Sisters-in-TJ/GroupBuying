@@ -27,6 +27,7 @@ Component({
     scrollTop: 0,
     scrollToMessage: '',
     hasKeyboard: false,
+    oppoPost:[],  // 对方发布的拼单
     requestChats: [],   // 本人发出的拼单请求
     first:true,
   },
@@ -142,8 +143,38 @@ Component({
             oppoId=list[i]
         }
         this.deleteNewMessageList(this.data.openId,oppoId)
+
+        // 添加对方发布的拼单
+        let that=this
+        await db.collection("user").where({
+          _openid:oppoId
+        }).get({
+          success(res) {
+            var postlist=res.data[0].publishidlist
+            for(var i=0;i<postlist.length;i++){
+              wx.cloud.callFunction({
+                name: 'getPostInfo',
+                data: {
+                  _id : postlist[i]
+                },
+                success: res => {
+                  if(res.result.data.length!=0 && res.result.data[0].need!=0){
+                    let change = "oppoPost[" + that.data.oppoPost.length + "]"
+                    that.setData({
+                      [change]: res.result.data[0]
+                    })
+                  }
+                },
+                fail: err => {
+                  console.error('[云函数] [getPostInfo] 调用失败：', err)
+                }
+              })
+            }
+          }
+        })
+
         wx.pageScrollTo({
-          scrollTop: 200*this.data.chats.length
+          scrollTop: 300*this.data.chats.length
         })
       }, '初始化失败')
     },
@@ -275,7 +306,6 @@ Component({
                     content: snapshot.docs[0].postName,
                     showCancel: false,
                  })
-                 console.log(id)
                  db.collection("chatroom").doc(id).update({
                    data: {
                      requestStatus: -2
