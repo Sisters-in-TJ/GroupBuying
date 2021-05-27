@@ -199,7 +199,7 @@ Page({
         )
       
         wx.showToast({
-          title: '新增记录成功',
+          title: '拼单发布成功！',
         })
         console.log('[数据库] [新增记录] 成功，记录 _id: ')
                 

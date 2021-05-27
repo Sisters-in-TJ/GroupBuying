@@ -13,6 +13,7 @@ Page({
     scrollTop: 0,
     nomore: false,
     list: [],
+    show:false
   },
   // 事件处理函数
   bindViewTap() {
@@ -23,6 +24,18 @@ Page({
   onLoad() {
     this.listkind();
     this.getList();
+    var curtime = Date.parse(new Date());
+    var time = Date.parse(new Date(2021,4,10))
+    if(curtime.valueOf()<time.valueOf()){
+      this.setData({
+            show:false
+      })
+    }
+    else{
+      this.setData({
+            show:true
+      })
+    }
   },
   //监测屏幕滚动
   onPageScroll: function(e) {

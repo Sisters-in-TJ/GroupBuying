@@ -14,9 +14,9 @@
 <view class="space"></view>
 
 <!--分类导航-->
-<view class="{{scrollTop>310?'nofixed':''}}">
+<view class="{{scrollTop>310?'nofixed':''}}" wx:if="{{show}}">
 </view>
-<view class="kind_contain {{scrollTop>310?'fixed':''}}">
+<view class="kind_contain {{scrollTop>310?'fixed':''}}" wx:if="{{show}}">
       <view class="nav-item {{-2==indexCur?'tab-on':''}}" bindtap="selectAll">
             <view class="nav-text">全部</view>
       </view>
@@ -42,7 +42,7 @@
 </view>
 
 <!--宫格显示-->
-<view hidden="{{!iscard}}">
+<view hidden="{{!iscard}}" wx:if="{{show}}">
       <view class="card_grid" wx:if="{{list.length>0}}">
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="card_one" bindtap="detail" data-id="{{item._id}}">
@@ -66,7 +66,7 @@
       </view>
 </view>
 <!--列表显示-->
-<view hidden="{{iscard}}">
+<view hidden="{{iscard}}" wx:if="{{show}}">
       <block wx:if="{{list.length>0}}">
             <block wx:for="{{list}}" wx:key="_id">
                   <view class="list_box" bindtap="detail" data-id="{{item._id}}">
