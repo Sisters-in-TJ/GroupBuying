@@ -69,15 +69,15 @@
               <image lazy-load class="list_poster" src="{{item.images_fileID[0]}}"></image>
               <view class="list_content">
                   <view class="list_word">
-                    <view class="list_title text-cut">{{item.name }}</view>
+                    <view class="list_title text-cut">{{item.name }}</view>                    
                     <view class="list_author text-cut">{{item.status}}/{{item.number}}人</view>
                   </view>
+
                   <view class="list_between">
                     <view class="list_price">￥{{item.price}}.00元</view>
                   </view>              
               </view>
             </view>
-
             <view class="change">
                 <button class="modify_bt" 
                 bindtap="modify"
@@ -88,5 +88,4 @@
             
 </view>
 
-<view class="line"></view>
 

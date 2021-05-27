@@ -161,7 +161,8 @@ Page({
         dura: new Date().getTime() + this.data.dura * (24 * 60 * 60 * 1000),
         openidList:this.data.openidList,
         multiIndex:this.data.multiIndex,
-        multiArray:this.data.multiArray
+        multiArray:this.data.multiArray,
+        note_counts:this.data.note_counts //new by ysq
       },
       success: res => {
         // 在返回结果中会包含新创建的记录的 _id
@@ -182,6 +183,7 @@ Page({
           images_fileID:[],          
           openidList:[],
           cids: '-1',
+          note_counts:'', //new by ysq
         })
         
         console.log(res._id)

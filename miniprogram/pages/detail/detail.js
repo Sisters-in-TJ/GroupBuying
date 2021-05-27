@@ -42,6 +42,11 @@ Page({
     duration:2000,
     l_length:0,
     swiper_height:'350',
+    multiArray:[],
+    multiIndex: [],
+    province:'',
+    city:'',
+    county:'',
     },
     
     /**
@@ -52,7 +57,7 @@ Page({
         _id:options.scene,
       }).get({
         success: res =>{
-          console.log('test==>',res.data[0].images_fileID);
+          console.log('test==>',res.data[0].multiIndex[0],res.data[0].multiArray[0][3].name);
           this.setData({
           id:options.scene,
           _openid:res.data[0]._openid,  
@@ -65,7 +70,12 @@ Page({
           images_fileID:res.data[0].images_fileID,
           imageList:res.data[0].imageList,
           openidList:res.data[0].openidList,
-          need:res.data[0].need,       
+          need:res.data[0].need,
+          multiArray:res.data[0].multiArray, 
+          multiIndex:res.data[0].multiIndex,  
+          province:res.data[0].multiArray[0][res.data[0].multiIndex[0]].name,
+          city:res.data[0].multiArray[1][res.data[0].multiIndex[1]].name,
+          county:res.data[0].multiArray[2][res.data[0].multiIndex[2]].name,   
           })
         }
       })
