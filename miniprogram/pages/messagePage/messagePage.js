@@ -41,7 +41,10 @@ Page({
 
   changeTabBar: function(){
     wx.hideTabBarRedDot({
-      index: 2,
+      index: 2, 
+      fail:res=>{
+        console.log(res);
+      }
     })
   },
   /**
