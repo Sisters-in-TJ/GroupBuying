@@ -25,7 +25,7 @@ Page({
     this.listkind();
     this.getList();
     var curtime = Date.parse(new Date());
-    var time = Date.parse(new Date(2021,4,10))
+    var time = Date.parse(new Date(2021,4,5))
     if(curtime.valueOf()<time.valueOf()){
       this.setData({
             show:false
@@ -132,6 +132,7 @@ kindSelect(e) {
         index: index
   }).orderBy('creat', 'desc').limit(20).get({
         success: function(res) {
+              console.log(res.data)
               wx.stopPullDownRefresh(); //暂停刷新动作
               if (res.data.length == 0) {
                     that.setData({

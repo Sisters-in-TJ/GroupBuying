@@ -2,7 +2,7 @@
 App({
   onLaunch() {
     var curtime = Date.parse(new Date());
-    var time = Date.parse(new Date(2021,4,10))
+    var time = Date.parse(new Date(2021,4,5))
     if(curtime.valueOf()<time.valueOf()){
       wx.hideTabBar();//隐藏系统自带的tabBar
     }
@@ -56,6 +56,9 @@ App({
           if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
             wx.showTabBarRedDot({
               index: 2,
+              fail:res=>{
+                console.log(res);
+              }
             })
           }
         },

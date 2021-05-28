@@ -70,7 +70,7 @@
             <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
             <view wx:if="{{item.requestStatus === 1 || item.requestStatus === -1}}">已同意</view>
             <view wx:if="{{item.requestStatus === 2 || item.requestStatus === -2}}">已拒绝</view>
-            <view wx:if="{{item.requestStatus === 3}}">已取消</view>
+            <view wx:if="{{item.requestStatus === 3 || item.requestStatus === -3}}">已取消</view>
           </view>
         </view>
         <view class="cu-avatar radius" style="background-image:url({{item.avatar}});"></view>
@@ -118,7 +118,7 @@
             <button wx:if="{{openId === item._openid && item.requestStatus===0}}" data-request="{{item}}" bindtap="onClickCancel" class="cu-btn round" style="background:#C8E6C9;width:100px;margin:3px">取消</button>
             <view wx:if="{{item.requestStatus === 1 || item.requestStatus === -1}}">已同意</view>
             <view wx:if="{{item.requestStatus === 2 || item.requestStatus === -2}}">已拒绝</view>
-            <view wx:if="{{item.requestStatus === 3}}">已取消</view>
+            <view wx:if="{{item.requestStatus === 3 || item.requestStatus === -3}}">已取消</view>
           </view>
         </view>
         <view class="date">{{item.time}}</view>

@@ -1,5 +1,5 @@
 <!--pages/middle/middle.wxml-->
-<view class="b_contain">
+<view class="b_contain" wx:if="{{show}}">
   <!-- PICTURE -->
 <view class="b_top">
   <block wx:for="{{imageList}}" wx:for-item="image" wx:for-index='idx'>

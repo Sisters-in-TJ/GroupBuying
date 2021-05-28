@@ -25,6 +25,7 @@ Component({
     textInputValue: '',
     openId: '',
     scrollTop: 0,
+    oppoId:'',
     scrollToMessage: '',
     hasKeyboard: false,
     oppoPost:[],  // 对方发布的拼单
@@ -52,7 +53,7 @@ Component({
       this.try(async () => {
         await this.initOpenID()
 
-        const { envId, collection } = this.properties
+        const { envId, collection, groupId } = this.properties
         this.db = wx.cloud.database({
           env: envId,
         })
@@ -68,6 +69,16 @@ Component({
         this.setData({
           chats: initList.reverse(),
           // scrollTop: 10000,
+        })
+
+        var list=groupId.split('/',2)
+        var oppoId
+        for(var i=0;i<list.length;i++){
+          if(list[i]!=this.data.openId)
+            oppoId=list[i]
+        }
+        this.setData({
+          oppoId:oppoId,
         })
 
         // 更新requestids
@@ -101,7 +112,6 @@ Component({
         for(var i=0;i<this.data.chats.length;i++){
           if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId){
             if(this.data.chats[i].requestStatus===1){
-              console.log("1")
               wx.showModal({
                 title: '您已加入此拼单',
                 content: this.data.chats[i].postName,
@@ -114,7 +124,6 @@ Component({
               })
             }
             else if(this.data.chats[i].requestStatus===2){
-              console.log("2")
               wx.showModal({
                 title: '您已被拒绝加入此拼单',
                 content: this.data.chats[i].postName,
@@ -125,6 +134,20 @@ Component({
                 requestStatus: -2
               }
             })
+            }
+          }
+          else if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.oppoId){
+            if(this.data.chats[i].requestStatus===3){
+              wx.showModal({
+                title: '对方已取消拼单请求',
+                content: this.data.chats[i].postName,
+                showCancel: false,
+              })
+              db.collection("chatroom").doc(this.data.chats[i]._id).update({
+                data: {
+                  requestStatus: -3
+                }
+              })
             }
           }
         }
@@ -174,7 +197,7 @@ Component({
         })
 
         wx.pageScrollTo({
-          scrollTop: 300*this.data.chats.length
+          scrollTop: 500*this.data.chats.length
         })
       }, '初始化失败')
     },
@@ -257,6 +280,7 @@ Component({
         const db = this.db
         const _ = db.command
         const openId=this.data.openId
+        const oppoId=this.data.oppoId
 
         console.warn(`开始监听`, criteria)
         // 监听1：接收消息
@@ -312,6 +336,32 @@ Component({
                    }
                  })
                  that.initRoom()
+                }
+              }
+            },
+            onError: function(err) {
+              console.error('the watch closed because of error', err)
+            }
+          })
+        }
+        else if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.oppoId && this.data.chats[i].requestStatus===0){
+          var id=this.data.chats[i]._id
+          this.requestListener[this.requestListener.length] = db.collection('chatroom').doc(this.data.chats[i]._id)
+          .watch({
+            onChange: function(snapshot) {
+              if(snapshot.type!=="init" && snapshot.docs[0]._openid===oppoId){
+                if(snapshot.docs[0].requestStatus===3){
+                  wx.showModal({
+                    title: '对方已取消拼单请求',
+                    content: snapshot.docs[0].postName,
+                    showCancel: false,
+                })
+                db.collection("chatroom").doc(id).update({
+                  data: {
+                    requestStatus: -3
+                  }
+                })
+                that.initRoom()
                 }
               }
             },
@@ -397,8 +447,6 @@ Component({
             if(list[i]==oppoid)
               flag=true
           }
-          console.log(list,oppoid)
-          console.log(flag)
           if(!flag && i==list.length){
             user.where({
               _openid: openid
@@ -729,6 +777,13 @@ Component({
          requestStatus: 3
         },
        })
+      var list=this.data.groupId.split('/',2)
+      var oppoId
+      for(var i=0;i<list.length;i++){
+        if(list[i]!=this.data.openId)
+          oppoId=list[i]
+      }
+      this.addNewMessage(oppoId,this.data.openId)
       this.initRoom()
     },
      //跳转详情

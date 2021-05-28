@@ -26,10 +26,23 @@ Page({
     publishidlist:[],
     l_length:0,
     multiArray: [],
-    multiIndex: [0,0,0]
+    multiIndex: [0,0,0],
+    show:false,
   },
   onLoad: function (options) {
     this.getCityInfo();//new
+    var curtime = Date.parse(new Date());
+    var time = Date.parse(new Date(2021,4,5))
+    if(curtime.valueOf()<time.valueOf()){
+      this.setData({
+            show:false
+      })
+    }
+    else{
+      this.setData({
+            show:true
+      })
+    }
   },
   createPost(e) {
     let that = this
