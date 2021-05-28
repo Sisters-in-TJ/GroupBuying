@@ -81,10 +81,8 @@
 <view class='item'>
   <view class="kind" >
   <navigator url="../my_group_messege/my_group_messege" open-type="navigate" class="navigator">
-    <view class="title">我的拼单</view>
-      <view class="detail2">
-        <text></text>
-      </view>
+    <view class="title_n">我的拼单</view>
+      
   </navigator>
   </view>
 </view>
@@ -96,10 +94,6 @@
   
     <button class='button_feedback' open-type='feedback' >
       意见反馈</button>
-      <view class="detail2">
-        <text></text>
-      </view>
- 
   </view>
 </view>
 
@@ -108,7 +102,7 @@
 <view class='item'>
   <view class="kind" >
   <navigator url="../personinfo/personinfo" open-type="navigate" class="navigator">
-    <view class="title">设置</view>
+    <view class="title_n">设置</view>
       
   </navigator>
   </view>
