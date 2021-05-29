@@ -1,12 +1,7 @@
 <!--pages/detail/detail.wxml-->
-<view class="container">
-  
+
 <!-- 详细信息 -->
-  <view class="first" >   
-    <!-- 本地图片调用 -->
-    
-    <!--wx:for是微信数据绑定的一种方式，该数组有多少数据就显示多少个view-->
-    <!--index为每个数据对应的下标-->
+  <view class="container" >
     <swiper indicator-dots="{{indicatorDots}}"
     autoplay="{{autoplay}}" class="swiper_home"
     style="height:{{swiper_height}}px">
@@ -17,12 +12,11 @@
             mode="aspecFill"></image>
           </swiper-item>
         </block>
-  </swiper>
-  <text class="space">\n</text>  
-
-    
+    </swiper>
+  <text class="space">\n</text>      
     <!--image lazy-load class="card_poster" src="{{images_fileID}}"></image-->
     <!--item就相当于数组名+下标的结合体，适用于调用数组所有数据-->
+    <view class="concrete_content">
             <view class="card_title text-cut">
               <text class="theme">分类：</text>
               <text class="content">{{name}}</text>
@@ -45,11 +39,11 @@
             <view class="card_author text-cut">
               <text class="theme">{{status}}/{{number}}人</text>                            
             </view>
-
+    </view>
     <view class="grid col-5 padding-sm" id="buttonContainer">
       <view class="margin-tb-sm text-center" v-for="(item,index) in ColorList" :key="index" >
         <button class="cu-btn round 'lines-olive'"
-          style="position:fixed;bottom:15px;left:10px;width:150rpx"
+          style="position:fixed;bottom:30rpx;left:20rpx;width:150rpx"
           bindtap="join">加 入</button>
 	    </view>
       <!-- <navigator url="../messagePage/room/room?contact={{_openid}}" open-type="navigate">
@@ -60,16 +54,15 @@
       <navigator url="../messagePage/room/room?contact={{_openid}}&request=false" open-type="navigate">
         <view class="margin-tb-sm text-center" v-for="(item,index) in ColorList" :key="index">
         <button class="cu-btn round 'lines-olive'"
-        style='position:fixed;bottom:15px;width:150rpx'>聊 天</button>
+        style='position:fixed;bottom:30rpx;width:150rpx;left:190rpx;'>聊 天</button>
         </view>
         </navigator>
     <view class="margin-tb-sm text-center"  v-for="(item,index) in ColorList" :key="index">
       <button  bindtap="collect" class="cu-btn round 'lines-olive'"
-      style='position:fixed;bottom:15px;right:10px;width:150rpx'>
+      style='position:fixed;bottom:30rpx;right:20rpx;width:150rpx'>
         <text class="bt_text">收 藏</text>
       </button>
     </view>
-    </view>
- 
+    </view> 
   </view>
-</view>
+
