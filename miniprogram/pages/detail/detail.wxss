@@ -1,7 +1,7 @@
 /**detail.wxss**/
+@import "../../colorui/main.wxss";
+@import "../../colorui/icon.wxss";
   .container{
-    width:100%;
-    height:100%;
     padding-top: 36rpx;
     background-color: rgb(250, 250, 250);    
   }

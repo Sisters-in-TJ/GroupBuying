@@ -1,7 +1,7 @@
 <!--pages/detail/detail.wxml-->
 
 <!-- 详细信息 -->
-  <view class="container" >
+  <view class="container" style="width:{{contentW}}rpx;height:{{contentH}}rpx;">
     <swiper indicator-dots="{{indicatorDots}}"
     autoplay="{{autoplay}}" class="swiper_home"
     style="height:{{swiper_height}}px">
@@ -19,7 +19,7 @@
     <!--item就相当于数组名+下标的结合体，适用于调用数组所有数据-->
     <view class="concrete_content">
             <view class="card_title text-cut">
-              <text class="theme">分类：</text>
+              <text class="theme">名称：</text>
               <text class="content">{{name}}</text>
             </view>
             <view class="description">
@@ -61,7 +61,7 @@
         </navigator>
     <view class="margin-tb-sm text-center"  v-for="(item,index) in ColorList" :key="index">
       <button  bindtap="collect" class="cu-btn round 'lines-olive'"
-      style='position:fixed;bottom:30rpx;right:20rpx;width:150rpx'>
+      style='position:fixed;bottom:30rpx;right:20rpx;width:150rpx;'>
         <text class="bt_text">收 藏</text>
       </button>
     </view>
