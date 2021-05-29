@@ -6,13 +6,14 @@
     autoplay="{{autoplay}}" class="swiper_home"
     style="height:{{swiper_height}}px">
         <block wx:for="{{images_fileID}}">
-          <swiper-item>
+          <swiper-item bindtap="previewImage" data-url="{{item}}">
             <image src="{{item}}" class="slide_image"
             style="width:100%;height:100%;"
             mode="aspecFill"></image>
           </swiper-item>
+
         </block>
-    </swiper>
+    </swiper> 
   <text class="space">\n</text>      
     <!--image lazy-load class="card_poster" src="{{images_fileID}}"></image-->
     <!--item就相当于数组名+下标的结合体，适用于调用数组所有数据-->
@@ -40,6 +41,7 @@
               <text class="theme">{{status}}/{{number}}人</text>                            
             </view>
     </view>
+    <view class="bottom_bt">
     <view class="grid col-5 padding-sm" id="buttonContainer">
       <view class="margin-tb-sm text-center" v-for="(item,index) in ColorList" :key="index" >
         <button class="cu-btn round 'lines-olive'"
@@ -63,6 +65,6 @@
         <text class="bt_text">收 藏</text>
       </button>
     </view>
-    </view> 
+    </view> </view>
   </view>
 

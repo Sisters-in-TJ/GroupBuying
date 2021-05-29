@@ -47,6 +47,7 @@ Page({
     province:'',
     city:'',
     county:'',
+    url:'',
     },
     
     /**
@@ -417,5 +418,12 @@ Page({
 
     return result.openid
   },
-  
+  previewImage(e){
+    console.log(e.currentTarget.dataset.url)
+    wx.previewImage({
+      current:e.currentTarget.dataset.url,
+      urls: [e.currentTarget.dataset.url],
+    })
+  }
+   
 })

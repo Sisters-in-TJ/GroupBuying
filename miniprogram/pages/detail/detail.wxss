@@ -1,5 +1,4 @@
 /**detail.wxss**/
-
   .container{
     width:100%;
     height:100%;
@@ -35,11 +34,14 @@
     color:grey;
     font-size: 30rpx;
   }
-
   .content{
     font-size:30rpx;
   }
 
-  
+  .bottom_bt{
+    background-color: rgb(250, 250, 250);
+  }
+
+   
   
   
