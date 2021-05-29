@@ -13,7 +13,8 @@ Page({
     scrollTop: 0,
     nomore: false,
     list: [],
-    show:false
+    show:false,
+    multiIndex:[]
   },
   // 事件处理函数
   bindViewTap() {
@@ -22,8 +23,10 @@ Page({
     })
   },
   onLoad() {
-    this.listkind();
-    this.getList();
+    this.getMultiArray(this).then(()=>{
+      this.listkind();
+      this.getList();
+    })
     var curtime = Date.parse(new Date());
     var time = Date.parse(new Date(2021,4,5))
     if(curtime.valueOf()<time.valueOf()){
@@ -43,6 +46,22 @@ Page({
             scrollTop: parseInt((e.scrollTop) * wx.getSystemInfoSync().pixelRatio)
       })
 },
+  getMultiArray:function(that){
+      return new Promise(function (resolve, reject) {
+        db.collection('cityDataArr').doc("3d27439a60adf5270003fcb420987c30")
+        .get({
+          success: res=>{
+            that.setData({
+              multiArray:res.data.data
+            })
+            resolve(res)
+          },
+          fail: res=>(
+            reject(res)
+          )
+        })
+      })
+    },
    //获取上次布局记忆
    listkind() {
       let that = this;
@@ -126,13 +145,26 @@ kindSelect(e) {
   } else {
         var index = that.data.indexCur + '' //小程序搜索必须对应格式
   }
+  
+//   console.log(index)
+//       wx.cloud.callFunction({
+//         name: 'getAllPost',
+//         data: {
+//             index:index,
+//         },
+//         success: res => {
+//               console.log(res)
+//         },
+//         fail: err => {
+//           console.error('[云函数] [addContact] 调用失败：', err)
+//         }
+//       })
   db.collection('post').where({
         need: _.neq(0),
         dura: _.gt(new Date().getTime()),
         index: index
   }).orderBy('creat', 'desc').limit(20).get({
         success: function(res) {
-              console.log(res.data)
               wx.stopPullDownRefresh(); //暂停刷新动作
               if (res.data.length == 0) {
                     that.setData({

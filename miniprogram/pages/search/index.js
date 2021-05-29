@@ -11,9 +11,12 @@ Page({
         blank: false,
         hislist: [],
         nomore:false,
+        multiIndex:[]
   },
   onLoad: function (options) {
+      this.getMultiArray(this).then(()=>{
     this.gethis();
+      })
   },
   gethis() {
     let that = this;
@@ -31,6 +34,22 @@ Page({
           },
     })
 },
+getMultiArray:function(that){
+    return new Promise(function (resolve, reject) {
+      db.collection('cityDataArr').doc("3d27439a60adf5270003fcb420987c30")
+      .get({
+        success: res=>{
+          that.setData({
+            multiArray:res.data.data
+          })
+          resolve(res)
+        },
+        fail: res=>(
+          reject(res)
+        )
+      })
+    })
+  },
 choosekey(e) {
   this.data.key = e.currentTarget.dataset.key;
   this.search('his');
