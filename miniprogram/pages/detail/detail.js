@@ -47,12 +47,24 @@ Page({
     province:'',
     city:'',
     county:'',
+    contentH:0,
+    contentW:0,
     },
     
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+      //这里单位是px
+      var windowHeight = wx.getSystemInfoSync().windowHeight
+      var windowWidth = wx.getSystemInfoSync().windowWidth
+      //转成rpx
+      var windowHeightRpx = windowHeight * 750 / windowWidth
+      var windowWidthRpx = 750
+      this.setData({
+        contentH: windowHeightRpx,
+        contentW: windowWidthRpx
+      })
       this.getMultiArray(this).then(()=>{
       db.collection('post').where({
         _id:options.scene,

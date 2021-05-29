@@ -167,6 +167,12 @@ Page({
                             index:that.data.cids,
                             note_counts:that.data.note_counts,
                             multiIndex:that.data.multiIndex,
+                            key: that.data.name 
+                            +that.data.thing
+                            +that.data.address
+                            +that.data.multiArray[0][that.data.multiIndex[0]].name
+                            +that.data.multiArray[1][that.data.multiIndex[1]].name
+                            +that.data.multiArray[2][that.data.multiIndex[2]].name,
                             // multiArray:that.data.multiArray
 
                         }
