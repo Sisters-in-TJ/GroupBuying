@@ -131,4 +131,5 @@
     align-items: center;
     font-size: 30rpx;
     letter-spacing: 2rpx;
+    padding-right:0px;
   }

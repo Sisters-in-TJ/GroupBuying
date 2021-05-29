@@ -64,7 +64,8 @@ Component({
 
         console.log('init query chats', initList)
         for(var i=0;i<initList.length;i++){
-          initList[i]['time']=initList[i].sendTime.toLocaleString().replace(/:\d{1,2}$/,' ')
+          // initList[i]['time']=initList[i].sendTime.toLocaleString().replace(/:\d{1,2}$/,' ')
+          initList[i]['time']=this.getExactTime(initList[i].sendTime)
         }
         this.setData({
           chats: initList.reverse(),
@@ -197,11 +198,22 @@ Component({
         })
 
         wx.pageScrollTo({
-          scrollTop: 500*this.data.chats.length
+          scrollTop: 500*this.data.chats.length+200*this.data.oppoPost.length
         })
       }, '初始化失败')
     },
 
+    getExactTime:function(time) {
+      var date = new Date(time);
+      // var date = new Date(time* 1000);
+      var year = date.getFullYear() + '-';
+      var month = (date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1) + '-';
+      var dates = date.getDate() + ' ';
+      var hour = date.getHours() + ':';
+      var min = date.getMinutes() + ':';
+      var second = date.getSeconds();
+      return year + month + dates + hour + min + second ;
+},
     updateRequestChats:async function(){
       const db = this.db
       const _ = db.command
