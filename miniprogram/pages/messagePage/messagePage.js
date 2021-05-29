@@ -1,5 +1,8 @@
 // miniprogram/pages/messagePage/messagePage.js
 const app = getApp()
+const db = wx.cloud.database()
+const users = db.collection('user')
+const _ = db.command
 
 Page({
 
@@ -31,12 +34,6 @@ Page({
         contentH: windowHeightRpx,
         contentW: windowWidthRpx
       })
-      if (app.globalData.openid) {
-        this.setData({
-          openid: app.globalData.openid
-        })
-      }
-      this.onGetContact()
   },
 
   changeTabBar: function(){
@@ -51,8 +48,6 @@ Page({
    * 读取数据库获得全部联系人openid和uid
    */
   onGetContact: function(){
-    const db = wx.cloud.database()
-    const users = db.collection('user')
     let that=this
     this.updateNewMessage(that).then(()=>{
     users.where({
@@ -60,6 +55,7 @@ Page({
     })
     .get({
       success: res => {
+        if(res.data.length!=0){
         this.setData({
           contacts: res.data[0].contactlist
         })
@@ -96,6 +92,14 @@ Page({
             length:0
           })
         }
+      }
+      else{
+        if (this.data.contacts.length==0){
+          this.setData({
+            length:0
+          })
+        }
+      }
       },
       fail: err => {
         console.error('查询失败：', err)
@@ -113,9 +117,11 @@ Page({
     })
     .get({
       success: res=>{
-        that.setData({
-          newmessage:res.data[0].newmessagelist
-        })
+        if(res.data.length!=0){
+          that.setData({
+            newmessage:res.data[0].newmessagelist
+          })
+        }
         resolve(res)
       },
       fail: res=>(

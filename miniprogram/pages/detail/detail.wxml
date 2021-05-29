@@ -33,7 +33,7 @@
             </view>
             <view class="address">
               <text class="theme">地址：</text>
-              <text class="content">{{province}}{{multiArray[1].length > 0 ?(" " + city):""}}{{multiArray[2].length > 0 ?(" " + county):""}} {{address}}
+              <text class="content">{{province}}{{multiArray[multiIndex[0]].citys.length > 0 ?(" " + city):""}}{{multiArray[multiIndex[0]].citys.length > 0 && multiArray[multiIndex[0]].citys[multiIndex[1]].areas.length > 0 ?(" " + county):""}} {{address}}
               </text>
             </view>
             <view class="card_between">              

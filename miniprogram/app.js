@@ -22,7 +22,6 @@ App({
         success: res => {
           this.globalData.openid = res.result.openid
           this.initWatcher(res.result.openid)
-          console.log(res.result.openid)
         },
         fail: err => {
           console.error('[云函数] [login] 调用失败', err)
@@ -63,7 +62,7 @@ App({
           }
         },
         onError: function(err) {
-          console.error('the watch closed because of error', err)
+          console.error('the user has not registered')
         }
       })
   },

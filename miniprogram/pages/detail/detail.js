@@ -52,12 +52,13 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {  
+    onLoad: function (options) {
+      this.getMultiArray(this).then(()=>{
       db.collection('post').where({
         _id:options.scene,
       }).get({
         success: res =>{
-          console.log('test==>',res.data[0].multiIndex[0],res.data[0].multiArray[0][3].name);
+          // console.log('test==>',res.data[0].multiIndex[0],res.data[0].multiIndex[1],res.data[0].multiIndex[2]);
           this.setData({
           id:options.scene,
           _openid:res.data[0]._openid,  
@@ -71,11 +72,10 @@ Page({
           imageList:res.data[0].imageList,
           openidList:res.data[0].openidList,
           need:res.data[0].need,
-          multiArray:res.data[0].multiArray, 
           multiIndex:res.data[0].multiIndex,  
-          province:res.data[0].multiArray[0][res.data[0].multiIndex[0]].name,
-          city:res.data[0].multiArray[1][res.data[0].multiIndex[1]].name,
-          county:res.data[0].multiArray[2][res.data[0].multiIndex[2]].name,   
+          province:this.data.multiArray[res.data[0].multiIndex[0]].name,
+          city:this.data.multiArray[res.data[0].multiIndex[0]].citys[res.data[0].multiIndex[1]].name,
+          county:this.data.multiArray[res.data[0].multiIndex[0]].citys[res.data[0].multiIndex[1]].areas[res.data[0].multiIndex[2]].name,   
           })
         }
       })
@@ -89,7 +89,7 @@ Page({
           this.setData({
             userInfo:result.result.data[0]
           })
-          console.log(this.data.userInfo)
+          // console.log(this.data.userInfo)
         },
         fail: err => {
           console.error('[云函数] [getInfo] 调用失败：', err)
@@ -97,9 +97,25 @@ Page({
       })
     })
       this.ifexists()
-    
+  })
     },    
 
+    getMultiArray:function(that){
+      return new Promise(function (resolve, reject) {
+        db.collection('cityDataArr').doc("3d27439a60adf5270003fcb420987c30")
+        .get({
+          success: res=>{
+            that.setData({
+              multiArray:res.data.data
+            })
+            resolve(res)
+          },
+          fail: res=>(
+            reject(res)
+          )
+        })
+      })
+    },
 
     ifexists:function(){
       console.log(app.globalData.openid)

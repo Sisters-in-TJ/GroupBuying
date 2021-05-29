@@ -12,7 +12,7 @@
       </navigator>
     </view>
     <view wx:if="{{length===0}}">
-      <view class="text-xl text-gray">您还没有任何消息</view>
+      <view class="text-xl text-gray" style="padding:10px">您还没有任何消息</view>
     </view>
   </view>
 </pullfresh>

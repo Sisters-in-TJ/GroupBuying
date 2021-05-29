@@ -55,8 +55,26 @@ Page({
                     cids:res.data.index,
                     note_counts:res.data.note_counts,
                     multiIndex:res.data.multiIndex,
-                    multiArray:res.data.multiArray,
+                    // multiArray:res.data.multiArray,
                 })
+        db.collection('cityDataArr').doc('3d27439a60adf5270003fcb420987c30').get({
+          success: newres => {
+            wx.hideLoading();
+            if (newres.data){
+              //获取云数据库数据
+              var temp = newres.data.data;
+              //初始化更新数据
+              this.setData({
+                provinces: temp,
+                multiArray: [temp, temp[res.data.multiIndex[0]].citys, temp[res.data.multiIndex[0]].citys[res.data.multiIndex[1]].areas],
+              })
+            }
+          },
+          fail: err => {
+            wx.hideLoading();
+            console.error(err)
+          }
+        })     
             }
         })
     },
@@ -149,7 +167,7 @@ Page({
                             index:that.data.cids,
                             note_counts:that.data.note_counts,
                             multiIndex:that.data.multiIndex,
-                            multiArray:that.data.multiArray
+                            // multiArray:that.data.multiArray
 
                         }
                       })
@@ -241,7 +259,7 @@ Page({
               //初始化更新数据
               that.setData({
                 provinces: temp,
-                multiArray: [temp, temp[0].citys, temp[0].citys[0].areas],
+                multiArray: [temp, temp[res.data.multiIndex[0]].citys, temp[res.data.multiIndex[0]].citys[res.data.multiIndex[1]].areas],
                 multiIndex: [that.data.multiIndex[0],that.data.multiIndex[1],that.data.multiIndex[2]]
               })
               console.log(that.data.provinces)
