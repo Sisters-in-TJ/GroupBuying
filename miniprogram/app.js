@@ -52,9 +52,6 @@ App({
       .watch({
         onChange: function(snapshot) {
           console.log('user-snapshot', snapshot)
-          // wx.showToast({
-          //   title: 'watch',
-          // })
           if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
             wx.showTabBarRedDot({
               index: 2,

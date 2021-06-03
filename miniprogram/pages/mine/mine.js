@@ -49,30 +49,6 @@ Page({
   }
   ,
   
-  initWatcher: function(openid){
-    //监听新消息
-    const db = wx.cloud.database()
-    const watcher = db.collection('user')
-      .where({
-        _openid:openid
-      })
-      .watch({
-        onChange: function(snapshot) {
-          console.log('user-snapshot', snapshot)
-          if(snapshot.docs.length!=0 && snapshot.docs[0].newmessagelist.length!=0){
-            wx.showTabBarRedDot({
-              index: 2,
-              fail:res=>{
-                console.log(res);
-              }
-            })
-          }
-        },
-        onError: function(err) {
-          console.error('the user has not registered')
-        }
-      })
-  },
   getUserProfile(e) {
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
     // 开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
@@ -86,7 +62,6 @@ Page({
           userInfo: res.userInfo,
           hasUserInfo: true
         })
-    // this.initWatcher(app.globalData.openid)
        
           
           db.collection('user').where({

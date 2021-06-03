@@ -238,10 +238,10 @@ Page({
               if (res.confirm) {
 
                 console.log('用户点击确定');        
-                console.log(that.data.openid);
+                console.log(app.globalData.openid);
                 console.log(that.data.id);
                 db.collection('user').where({
-                  _openid:that.data.openid
+                  _openid:app.globalData.openid
                 }).update({
                   data: {
                     collectidlist:_.push([that.data.id]),
@@ -336,19 +336,6 @@ Page({
         }
       }
     })
-    // wx.cloud.callFunction({
-    //   name: 'addNewMessage',
-    //   data: {
-    //     openid:oppoid,
-    //     oppoid:openid
-    //   },
-    //   success: res => {
-    //     console.log('newmessagelist更新成功')
-    //   },
-    //   fail: err => {
-    //     console.error('[云函数] [addNewMessage] 调用失败：', err)
-    //   }
-    // })
   },
   addContact:function(id1,id2){
     const db = wx.cloud.database()
@@ -402,20 +389,6 @@ Page({
           }
       }
     })
-    // //调用addContact，更新user
-    // wx.cloud.callFunction({
-    //   name: 'addContact',
-    //   data: {
-    //     id1:id1,
-    //     id2:id2
-    //   },
-    //   success: res => {
-    //     console.log('联系人加入成功')
-    //   },
-    //   fail: err => {
-    //     console.error('[云函数] [addContact] 调用失败：', err)
-    //   }
-    // })
   },
 
   getOpenID: async function() {

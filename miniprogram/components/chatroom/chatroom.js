@@ -1,9 +1,3 @@
-// const FATAL_REBUILD_TOLERANCE = 10
-// const SETDATA_SCROLL_TO_BOTTOM = {
-//   scrollTop: 100000,
-//   scrollWithAnimation: true,
-// }
-
 Component({
   properties: {
     envId: String,
@@ -64,12 +58,10 @@ Component({
 
         console.log('init query chats', initList)
         for(var i=0;i<initList.length;i++){
-          // initList[i]['time']=initList[i].sendTime.toLocaleString().replace(/:\d{1,2}$/,' ')
           initList[i]['time']=this.getExactTime(initList[i].sendTime)
         }
         this.setData({
           chats: initList.reverse(),
-          // scrollTop: 10000,
         })
 
         var list=groupId.split('/',2)
@@ -82,31 +74,6 @@ Component({
           oppoId:oppoId,
         })
 
-        // 更新requestids
-        // let that=this
-        // var requestids=[]
-        // var flag=false
-        // for(var i=0;i<this.data.chats.length;i++){
-        //   if(this.data.chats[i].msgType=="request" && this.data.chats[i]._openid==this.data.openId){
-        //     db.collection("post").doc(this.data.chats[i].textContent).get({
-        //       success(res) {
-        //         flag=false
-        //         for(var j=0;j<requestids.length;j++){
-        //           if(requestids[j]==res.data._id){
-        //             flag=true
-        //           }
-        //         }
-        //         let change = "requestChats[" + that.data.requestChats.length + "]"
-        //         if(!flag){
-        //           that.setData({
-        //             [change]: res.data
-        //           })
-        //           requestids[requestids.length]=res.data._id
-        //         }
-        //       }
-        //     })
-        //   }
-        // }
         await this.updateRequestChats()
 
         // 判断是否有拼单请求状态变化
@@ -197,15 +164,11 @@ Component({
           }
         })
 
-        wx.pageScrollTo({
-          scrollTop: 500*this.data.chats.length+200*this.data.oppoPost.length
-        })
       }, '初始化失败')
     },
 
     getExactTime:function(time) {
       var date = new Date(time);
-      // var date = new Date(time* 1000);
       var year = date.getFullYear() + '-';
       var month = (date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1) + '-';
       var dates = date.getDate() + ' ';
@@ -213,7 +176,7 @@ Component({
       var min = date.getMinutes() + ':';
       var second = date.getSeconds();
       return year + month + dates + hour + min + second ;
-},
+    },
     updateRequestChats:async function(){
       const db = this.db
       const _ = db.command
@@ -396,7 +359,6 @@ Component({
             ...[...snapshot.docs].sort((x, y) => x.sendTimeTS - y.sendTimeTS),
           ],
         })
-        // this.scrollToBottom()
         this.inited = true
       } else {
         let hasNewMessage = false
@@ -555,7 +517,6 @@ Component({
               },
             ]
           })
-          // this.scrollToBottom(true)
 
           const uploadTask = wx.cloud.uploadFile({
             cloudPath: `${this.data.openId}/${Math.random()}_${Date.now()}.${res.tempFilePaths[0].match(/\.(\w+)$/)[1]}`,
@@ -677,40 +638,7 @@ Component({
         urls: [e.target.dataset.fileid],
       })
     },
-
-    // scrollToBottom(force) {
-    //   if (force) {
-    //     console.log('force scroll to bottom')
-    //     this.setData(SETDATA_SCROLL_TO_BOTTOM)
-    //     return
-    //   }
-
-    //   this.createSelectorQuery().select('.body').boundingClientRect(bodyRect => {
-    //     this.createSelectorQuery().select(`.body`).scrollOffset(scroll => {
-    //       if (scroll.scrollTop + bodyRect.height * 3 > scroll.scrollHeight) {
-    //         console.log('should scroll to bottom')
-    //         this.setData(SETDATA_SCROLL_TO_BOTTOM)
-    //       }
-    //     }).exec()
-    //   }).exec()
-    // },
-
-    // async onScrollToUpper() {
-    //   if (this.db && this.data.chats.length) {
-    //     const { collection } = this.properties
-    //     const _ = this.db.command
-    //     const { data } = await this.db.collection(collection).where(this.mergeCommonCriteria({
-    //       sendTimeTS: _.lt(this.data.chats[0].sendTimeTS),
-    //     })).orderBy('sendTimeTS', 'desc').get()
-    //     this.data.chats.unshift(...data.reverse())
-    //     this.setData({
-    //       chats: this.data.chats,
-    //       scrollToMessage: `item-${data.length}`,
-    //       scrollWithAnimation: false,
-    //     })
-    //   }
-    // },
-
+    
     async try(fn, title) {
       try {
         await fn()
@@ -840,11 +768,11 @@ Component({
         }
       })
     },
-    // 回到顶部
-    goToTop: function (e) {
+    // 到达底部
+    goToBottom: function (e) {
       if (wx.pageScrollTo) {
         wx.pageScrollTo({
-          scrollTop: 0
+          scrollTop: this.data.chats.length*500
         })
       } else {
         wx.showModal({

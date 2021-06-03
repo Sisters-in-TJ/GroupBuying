@@ -9,7 +9,6 @@ Page({
     logged: false,
     takeSession: false,
     requestResult: '',
-    // chatRoomEnvId: 'release-f8415a',
     chatRoomCollection: 'chatroom',
     chatRoomGroupId: '',
     chatRoomGroupName: '',
@@ -49,20 +48,6 @@ Page({
         success: res => {
           this.setData({
             chatRoomGroupName: res.result.data[0].name,
-          })
-        },
-        fail: err => {
-          console.error('[云函数] [getInfo] 调用失败：', err)
-        }
-      })
-
-      wx.cloud.callFunction({
-        name: 'getInfo',
-        data: {
-          openid:openid
-        },
-        success: res => {
-          this.setData({
             avatarUrl: res.result.data[0].avatarUrl,
             userInfo:res.result.data[0],
           })
@@ -83,7 +68,6 @@ Page({
         if (res.safeArea) {
           const { top, bottom } = res.safeArea
           this.setData({
-            // containerStyle: `padding-top: ${(/ios/i.test(res.system) ? 10 : 20) + top}px; padding-bottom: ${20 + res.windowHeight - bottom}px`,
             containerStyle: `padding-top: 0px; padding-bottom: ${20 + res.windowHeight - bottom}px`,
           })
         }

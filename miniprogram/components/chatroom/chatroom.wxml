@@ -158,6 +158,6 @@
   </view>
   <!-- to the top of the page -->
   <!-- <view class="cuIcon-top" class='goTop' bindTap="goTop"></view> -->
-  <view bindtap="goToTop">
-    <image src='../../images/toTop.png' class='goTop'></image>
+  <view bindtap="goToBottom">
+    <image src='../../images/toBottom.png' class='goBottom'></image>
   </view>
